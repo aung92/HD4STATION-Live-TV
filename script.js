@@ -1,5 +1,5 @@
+// ==================== LIVE TV CORE ====================
 (function() {
-    // SERVER DEFINITIONS
     const SERVERS = [
         {
             id: 0,
@@ -20,16 +20,13 @@
     ];
 
     let activeServerId = 0;
-
-    // DOM Elements
     const playerFrame = document.getElementById('livePlayerIframe');
     const channelGrid = document.getElementById('channelGrid');
     const serverInfoGridEl = document.getElementById('serverInfoGrid');
     const tabButtons = document.querySelectorAll('.server-tab-btn');
 
-    // Toast notification
     function showToast(message, type = 'success') {
-        const existingToast = document.querySelector('.toast-message');
+        let existingToast = document.querySelector('.toast-message');
         if (existingToast) existingToast.remove();
         const toast = document.createElement('div');
         toast.className = 'toast-message';
@@ -38,55 +35,31 @@
         setTimeout(() => toast.remove(), 2800);
     }
 
-    // Core switching logic
     function switchServer(serverId, updateUI = true) {
         const targetServer = SERVERS.find(s => s.id === serverId);
         if (!targetServer) return;
-
         activeServerId = serverId;
-
         if (playerFrame) {
             playerFrame.src = 'about:blank';
-            setTimeout(() => {
-                playerFrame.src = targetServer.url;
-            }, 30);
+            setTimeout(() => { playerFrame.src = targetServer.url; }, 40);
         }
-
         if (updateUI) {
             tabButtons.forEach(btn => {
                 const btnId = parseInt(btn.getAttribute('data-server'), 10);
-                if (btnId === serverId) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
+                btn.classList.toggle('active', btnId === serverId);
             });
-
-            const channelCards = document.querySelectorAll('.channel-card');
-            channelCards.forEach(card => {
+            document.querySelectorAll('.channel-card').forEach(card => {
                 const cardServerId = parseInt(card.getAttribute('data-server-id'), 10);
-                if (cardServerId === serverId) {
-                    card.classList.add('active');
-                } else {
-                    card.classList.remove('active');
-                }
+                card.classList.toggle('active', cardServerId === serverId);
             });
-
-            const infoCards = document.querySelectorAll('.server-info-card');
-            infoCards.forEach(card => {
+            document.querySelectorAll('.server-info-card').forEach(card => {
                 const infoServerId = parseInt(card.getAttribute('data-info-server'), 10);
-                if (infoServerId === serverId) {
-                    card.classList.add('active-info');
-                } else {
-                    card.classList.remove('active-info');
-                }
+                card.classList.toggle('active-info', infoServerId === serverId);
             });
         }
-
         showToast(`Switched to ${targetServer.name}`, 'success');
     }
 
-    // Build horizontal channel list
     function buildChannelList() {
         if (!channelGrid) return;
         channelGrid.innerHTML = '';
@@ -96,22 +69,16 @@
             card.className = `channel-card ${isActive ? 'active' : ''}`;
             card.setAttribute('data-server-id', server.id);
             card.innerHTML = `
-                <div class="channel-icon">
-                    <i class="fas ${server.icon}"></i>
-                </div>
+                <div class="channel-icon"><i class="fas ${server.icon}"></i></div>
                 <div class="channel-name">${escapeHtml(server.name)}</div>
                 <div class="channel-status"><i class="fas fa-circle" style="font-size: 8px; color:#30E3A0;"></i> LIVE</div>
                 <span class="channel-badge">${escapeHtml(server.quality || 'HD')}</span>
             `;
-            card.addEventListener('click', (e) => {
-                e.stopPropagation();
-                switchServer(server.id, true);
-            });
+            card.addEventListener('click', () => switchServer(server.id, true));
             channelGrid.appendChild(card);
         });
     }
 
-    // Build server info grid
     function buildServerInfoGrid() {
         if (!serverInfoGridEl) return;
         serverInfoGridEl.innerHTML = '';
@@ -121,23 +88,18 @@
             infoCard.className = `server-info-card ${isActive ? 'active-info' : ''}`;
             infoCard.setAttribute('data-info-server', server.id);
             infoCard.innerHTML = `
-                <div class="info-icon">
-                    <i class="fas ${server.icon}"></i>
-                </div>
+                <div class="info-icon"><i class="fas ${server.icon}"></i></div>
                 <div class="info-content">
                     <div class="info-title">${escapeHtml(server.name)}</div>
                     <div class="info-desc">${escapeHtml(server.quality)} · 24/7 Stable</div>
                 </div>
                 <div class="live-tag"><span class="live-pulse" style="display: inline-block; width:6px; height:6px; margin-right: 6px;"></span> LIVE</div>
             `;
-            infoCard.addEventListener('click', () => {
-                switchServer(server.id, true);
-            });
+            infoCard.addEventListener('click', () => switchServer(server.id, true));
             serverInfoGridEl.appendChild(infoCard);
         });
     }
 
-    // Helper to prevent XSS
     function escapeHtml(str) {
         if (!str) return '';
         return str.replace(/[&<>]/g, function(m) {
@@ -148,67 +110,43 @@
         });
     }
 
-    // Initialize tabs
     function initTabs() {
-        tabButtons.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const serverVal = parseInt(btn.getAttribute('data-server'), 10);
-                if (!isNaN(serverVal)) {
-                    switchServer(serverVal, true);
-                }
-            });
-        });
+        tabButtons.forEach(btn => btn.addEventListener('click', () => {
+            const serverVal = parseInt(btn.getAttribute('data-server'), 10);
+            if (!isNaN(serverVal)) switchServer(serverVal, true);
+        }));
     }
 
-    // Smooth scroll behavior
     function ensureScrollBehavior() {
         const scrollWrap = document.getElementById('channelScrollWrapper');
         if (scrollWrap) {
             scrollWrap.style.scrollBehavior = 'smooth';
             setTimeout(() => {
                 const activeCard = document.querySelector('.channel-card.active');
-                if (activeCard && scrollWrap) {
-                    const cardRect = activeCard.getBoundingClientRect();
-                    const containerRect = scrollWrap.getBoundingClientRect();
-                    if (cardRect.left < containerRect.left || cardRect.right > containerRect.right) {
-                        activeCard.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                    }
-                }
+                if (activeCard && scrollWrap) activeCard.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
             }, 200);
         }
     }
 
-    // Iframe reliability
     function enhanceIframeReliability() {
         if (!playerFrame) return;
-        document.addEventListener('visibilitychange', function() {
-            if (!document.hidden && playerFrame && playerFrame.src && playerFrame.src !== 'about:blank') {
-                const currentServer = SERVERS.find(s => s.id === activeServerId);
-                if (currentServer) {
-                    playerFrame.src = currentServer.url;
-                }
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && playerFrame.src && playerFrame.src !== 'about:blank') {
+                const current = SERVERS.find(s => s.id === activeServerId);
+                if (current) playerFrame.src = current.url;
             }
         });
     }
 
-    // Fullscreen support
     function attachGlobalInteractivity() {
         const wrapper = document.querySelector('.player-wrapper');
-        if (wrapper) {
-            wrapper.addEventListener('dblclick', () => {
-                const iframe = document.getElementById('livePlayerIframe');
-                if (iframe && iframe.requestFullscreen) {
-                    iframe.requestFullscreen().catch(err => {
-                        wrapper.requestFullscreen?.();
-                    });
-                } else if (wrapper.requestFullscreen) {
-                    wrapper.requestFullscreen();
-                }
-            });
-        }
+        if (wrapper) wrapper.addEventListener('dblclick', () => {
+            const iframe = document.getElementById('livePlayerIframe');
+            if (iframe?.requestFullscreen) iframe.requestFullscreen().catch(() => wrapper.requestFullscreen?.());
+            else wrapper.requestFullscreen?.();
+        });
     }
 
-    // Main initialization
     function initLiveTV() {
         buildChannelList();
         buildServerInfoGrid();
@@ -216,34 +154,118 @@
         ensureScrollBehavior();
         attachGlobalInteractivity();
         enhanceIframeReliability();
-
-        if (playerFrame && SERVERS[0]) {
-            playerFrame.src = SERVERS[0].url;
-        }
+        if (playerFrame && SERVERS[0]) playerFrame.src = SERVERS[0].url;
         switchServer(activeServerId, true);
-
+        
         let resizeTimer;
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimer);
             resizeTimer = setTimeout(() => {
                 const activeCardNow = document.querySelector('.channel-card.active');
                 const scrollContainer = document.getElementById('channelScrollWrapper');
-                if (activeCardNow && scrollContainer) {
-                    const cardRect = activeCardNow.getBoundingClientRect();
-                    const containerRect = scrollContainer.getBoundingClientRect();
-                    if (cardRect.left < containerRect.left || cardRect.right > containerRect.right) {
-                        activeCardNow.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                    }
-                }
+                if (activeCardNow && scrollContainer) activeCardNow.scrollIntoView({ behavior: 'smooth', inline: 'center' });
             }, 150);
         });
-
-        console.log('HD4STATION Live TV — Fully ready');
+        
+        // Simulate live viewers count updater
+        setInterval(() => {
+            const viewerSpan = document.getElementById('viewerCount');
+            if (viewerSpan) {
+                let curr = parseInt(viewerSpan.innerText.replace(/,/g, '')) || 1284;
+                let change = Math.floor(Math.random() * 15) - 5;
+                let newVal = Math.max(800, curr + change);
+                viewerSpan.innerText = newVal.toLocaleString();
+            }
+        }, 30000);
     }
+    
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initLiveTV);
+    else initLiveTV();
+})();
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initLiveTV);
-    } else {
-        initLiveTV();
+// ========== THIRD PARTY SOCIAL, COOKIE, ADSENSE READY ==========
+(function() {
+    // Cookie Consent Logic
+    const cookieBanner = document.getElementById('cookieConsent');
+    const acceptBtn = document.getElementById('acceptCookies');
+    const denyBtn = document.getElementById('denyCookies');
+    
+    function setCookieConsent(accepted) {
+        localStorage.setItem('cookie_consent', accepted ? 'accepted' : 'denied');
+        if (cookieBanner) cookieBanner.classList.remove('show');
+        if (accepted) {
+            loadAdSenseScript();
+            enableAnalytics();
+        }
     }
+    
+    function loadAdSenseScript() {
+        if (!document.querySelector('#adsense-script')) {
+            const script = document.createElement('script');
+            script.id = 'adsense-script';
+            script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
+            script.async = true;
+            script.crossOrigin = 'anonymous';
+            document.head.appendChild(script);
+            setTimeout(() => {
+                if (window.adsbygoogle) {
+                    try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) { console.log("AdSense ready"); }
+                }
+            }, 500);
+        }
+    }
+    
+    function enableAnalytics() {
+        console.log("Third-party scripts enabled (GA, Ads)");
+    }
+    
+    function checkConsent() {
+        const consent = localStorage.getItem('cookie_consent');
+        if (!consent && cookieBanner) {
+            setTimeout(() => cookieBanner.classList.add('show'), 500);
+        } else if (consent === 'accepted') {
+            loadAdSenseScript();
+            enableAnalytics();
+        }
+    }
+    
+    if (acceptBtn) acceptBtn.addEventListener('click', () => setCookieConsent(true));
+    if (denyBtn) denyBtn.addEventListener('click', () => setCookieConsent(false));
+    checkConsent();
+    
+    // Social share functionality
+    const currentUrl = encodeURIComponent(window.location.href);
+    const shareText = encodeURIComponent("Watch HD4STATION Live TV - Free HD Streams!");
+    
+    document.getElementById('fbShare')?.addEventListener('click', () => window.open(`https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`, '_blank'));
+    document.getElementById('twShare')?.addEventListener('click', () => window.open(`https://twitter.com/intent/tweet?text=${shareText}&url=${currentUrl}`, '_blank'));
+    document.getElementById('waShare')?.addEventListener('click', () => window.open(`https://wa.me/?text=${shareText}%20${currentUrl}`, '_blank'));
+    document.getElementById('shareTwitter')?.addEventListener('click', () => window.open(`https://twitter.com/intent/tweet?text=${shareText}&url=${currentUrl}`, '_blank'));
+    document.getElementById('shareWhatsApp')?.addEventListener('click', () => window.open(`https://wa.me/?text=${shareText}%20${currentUrl}`, '_blank'));
+    
+    const copyLinkBtn = document.getElementById('copyLinkBtn');
+    if (copyLinkBtn) {
+        copyLinkBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                const toastMsg = document.createElement('div');
+                toastMsg.className = 'toast-message';
+                toastMsg.innerHTML = '<i class="fas fa-check-circle" style="margin-right: 8px; color:#00C4B4;"></i> Link copied to clipboard!';
+                document.body.appendChild(toastMsg);
+                setTimeout(() => toastMsg.remove(), 2000);
+            });
+        });
+    }
+    
+    // Responsive sidebar ad visibility on desktop
+    function handleSidebarAd() {
+        const sidebar = document.getElementById('sidebarAdDesktop');
+        if (sidebar) {
+            if (window.innerWidth >= 900) sidebar.style.display = 'block';
+            else sidebar.style.display = 'none';
+        }
+    }
+    window.addEventListener('resize', handleSidebarAd);
+    handleSidebarAd();
+    
+    console.log("HD4STATION Live TV with ads & third-party ready — fully responsive");
 })();
