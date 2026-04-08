@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>HD4STATION | Live TV Stream</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<div class="ltv-page-container">
+    <!-- Header -->
+    <div class="ltv-header">
+        <div class="ltv-brand">
+            <div class="ltv-brand-icon">
+                <i class="fas fa-broadcast-tower"></i>
+            </div>
+            <div class="ltv-brand-text">
+                <h1>HD4STATION Live TV</h1>
+                <p><span class="live-pulse"></span> 24/7 Direct Streams · HD Quality</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Server Tabs -->
+    <div class="ltv-server-tabs" id="serverTabsContainer">
+        <button class="server-tab-btn" data-server="0">
+            <i class="fas fa-server"></i> <span>Server 1 · Mirraby</span>
+        </button>
+        <button class="server-tab-btn" data-server="1">
+            <i class="fas fa-tower-broadcast"></i> <span>Server 2 · Ash TV</span>
+        </button>
+    </div>
+
+    <!-- Player Area -->
+    <div class="ltv-player-section">
+        <div class="player-wrapper">
+            <div class="player-container">
+                <div class="live-badge">
+                    <span class="dot"></span> LIVE STREAM
+                </div>
+                <div class="player-frame">
+                    <iframe id="livePlayerIframe" 
+                        src="about:blank" 
+                        allow="fullscreen; autoplay; encrypted-media" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scrollable Channels -->
+    <div class="channels-section">
+        <div class="section-head">
+            <h3><i class="fas fa-satellite-dish"></i> Available Channels</h3>
+            <div class="scroll-hint"><i class="fas fa-arrows-alt-h"></i> Swipe or scroll →</div>
+        </div>
+        <div class="channel-scroll" id="channelScrollWrapper">
+            <div class="channel-grid" id="channelGrid"></div>
+        </div>
+    </div>
+
+    <!-- Server Info Cards -->
+    <div class="servers-info-grid" id="serverInfoGrid"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
