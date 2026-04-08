@@ -168,6 +168,90 @@
     <i class="fas fa-arrow-up"></i>
 </button>
 
+<!-- Cookie Consent Banner -->
+<div id="cookieConsent" class="cookie-consent">
+    <div class="cookie-content">
+        <div class="cookie-icon">
+            <i class="fas fa-cookie-bite"></i>
+        </div>
+        <div class="cookie-text">
+            <h4>🍪 We Value Your Privacy</h4>
+            <p>We use cookies and similar technologies to enhance your browsing experience, serve personalized ads, and analyze our traffic. By clicking "Accept All", you consent to our use of cookies.</p>
+        </div>
+        <div class="cookie-buttons">
+            <button class="cookie-btn cookie-settings" id="cookieSettings">
+                <i class="fas fa-sliders-h"></i> Settings
+            </button>
+            <button class="cookie-btn cookie-deny" id="cookieDeny">
+                <i class="fas fa-times"></i> Deny
+            </button>
+            <button class="cookie-btn cookie-accept" id="cookieAccept">
+                <i class="fas fa-check"></i> Accept All
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Cookie Settings Modal -->
+<div id="cookieModal" class="cookie-modal">
+    <div class="cookie-modal-content">
+        <div class="cookie-modal-header">
+            <h3><i class="fas fa-cookie-bite"></i> Cookie Preferences</h3>
+            <button class="cookie-modal-close" id="closeModal">&times;</button>
+        </div>
+        <div class="cookie-modal-body">
+            <p>Customize your cookie preferences below. Essential cookies are necessary for the website to function properly.</p>
+            
+            <div class="cookie-option">
+                <div class="cookie-option-info">
+                    <h4>Essential Cookies</h4>
+                    <p>Required for basic website functionality. These cannot be disabled.</p>
+                </div>
+                <label class="cookie-toggle disabled">
+                    <input type="checkbox" checked disabled>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            
+            <div class="cookie-option">
+                <div class="cookie-option-info">
+                    <h4>Functional Cookies</h4>
+                    <p>Remember your preferences and enhance your experience.</p>
+                </div>
+                <label class="cookie-toggle">
+                    <input type="checkbox" id="functionalCookies" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            
+            <div class="cookie-option">
+                <div class="cookie-option-info">
+                    <h4>Analytics Cookies</h4>
+                    <p>Help us understand how visitors interact with our website.</p>
+                </div>
+                <label class="cookie-toggle">
+                    <input type="checkbox" id="analyticsCookies" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            
+            <div class="cookie-option">
+                <div class="cookie-option-info">
+                    <h4>Advertising Cookies</h4>
+                    <p>Used to deliver personalized ads based on your interests.</p>
+                </div>
+                <label class="cookie-toggle">
+                    <input type="checkbox" id="advertisingCookies" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+        <div class="cookie-modal-footer">
+            <button class="cookie-modal-save" id="savePreferences">Save Preferences</button>
+        </div>
+    </div>
+</div>
+
 <script src="script.js"></script>
 </body>
 </html>

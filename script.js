@@ -26,6 +26,13 @@
     const playerSection = document.getElementById('playerSection');
     const backToTopBtn = document.getElementById('backToTopBtn');
 
+    // Cookie preferences
+    let cookiePreferences = {
+        functional: true,
+        analytics: true,
+        advertising: true
+    };
+
     // Toast notification
     function showToast(message) {
         const existing = document.querySelector('.toast-message');
@@ -59,11 +66,8 @@
         
         activeServerId = serverId;
         loadStream(serverId);
-        
-        // Scroll to player on mobile and desktop for better UX
         scrollToPlayer();
         
-        // Update UI
         heroServerBtns.forEach(btn => {
             const btnId = parseInt(btn.dataset.server);
             btn.classList.toggle('active', btnId === serverId);
@@ -92,9 +96,7 @@
                     <i class="fas fa-circle" style="font-size: 6px; color:#30E3A0;"></i> ${server.quality}
                 </div>
             `;
-            card.addEventListener('click', () => {
-                switchServer(server.id);
-            });
+            card.addEventListener('click', () => switchServer(server.id));
             channelsGrid.appendChild(card);
         });
     }
@@ -109,7 +111,7 @@
         });
     }
 
-    // Fullscreen functionality with back-to-top visibility
+    // Fullscreen functionality
     function initFullscreen() {
         const fullscreenBtn = document.getElementById('fullscreenBtn');
         const playerWrapper = document.querySelector('.player-wrapper');
@@ -125,7 +127,6 @@
             });
         }
         
-        // Listen for fullscreen change to adjust back-to-top visibility
         document.addEventListener('fullscreenchange', handleFullscreenChange);
         document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
         document.addEventListener('mozfullscreenchange', handleFullscreenChange);
@@ -136,11 +137,7 @@
         isFullscreen = !!document.fullscreenElement;
         const backToTop = document.getElementById('backToTopBtn');
         if (backToTop) {
-            if (isFullscreen) {
-                backToTop.style.display = 'none';
-            } else {
-                backToTop.style.display = 'flex';
-            }
+            backToTop.style.display = isFullscreen ? 'none' : 'flex';
         }
     }
 
@@ -161,7 +158,7 @@
         });
     }
 
-    // Live viewers counter (dynamic)
+    // Live viewers counter
     function initViewerCounter() {
         const viewerSpan = document.getElementById('liveViewers');
         if (viewerSpan) {
@@ -177,7 +174,7 @@
     // Social sharing
     function initSocialShare() {
         const url = encodeURIComponent(window.location.href);
-        const text = encodeURIComponent("Watch HD4STATION Live TV - Premium HD Streaming!");
+        const text = encodeURIComponent("Watch CHALUNG Live TV - Premium HD Streaming!");
         
         document.getElementById('shareFb')?.addEventListener('click', (e) => {
             e.preventDefault();
@@ -221,9 +218,171 @@
         });
     }
 
+    // ========== COOKIE CONSENT SYSTEM ==========
+    function initCookieConsent() {
+        const cookieBanner = document.getElementById('cookieConsent');
+        const acceptBtn = document.getElementById('cookieAccept');
+        const denyBtn = document.getElementById('cookieDeny');
+        const settingsBtn = document.getElementById('cookieSettings');
+        const modal = document.getElementById('cookieModal');
+        const closeModal = document.getElementById('closeModal');
+        const savePreferences = document.getElementById('savePreferences');
+        
+        // Check if user has already made a choice
+        const consentGiven = localStorage.getItem('cookie_consent_given');
+        const savedPreferences = localStorage.getItem('cookie_preferences');
+        
+        if (savedPreferences) {
+            cookiePreferences = JSON.parse(savedPreferences);
+        }
+        
+        if (!consentGiven) {
+            setTimeout(() => {
+                cookieBanner.classList.add('show');
+            }, 1000);
+        } else {
+            applyCookiePreferences();
+        }
+        
+        // Accept all cookies
+        if (acceptBtn) {
+            acceptBtn.addEventListener('click', () => {
+                cookiePreferences = {
+                    functional: true,
+                    analytics: true,
+                    advertising: true
+                };
+                saveCookiePreferences('all');
+                cookieBanner.classList.remove('show');
+                showToast('Cookies accepted! Thank you for your preference.');
+                applyCookiePreferences();
+            });
+        }
+        
+        // Deny all non-essential cookies
+        if (denyBtn) {
+            denyBtn.addEventListener('click', () => {
+                cookiePreferences = {
+                    functional: false,
+                    analytics: false,
+                    advertising: false
+                };
+                saveCookiePreferences('deny');
+                cookieBanner.classList.remove('show');
+                showToast('You have denied non-essential cookies.');
+                applyCookiePreferences();
+            });
+        }
+        
+        // Open settings modal
+        if (settingsBtn) {
+            settingsBtn.addEventListener('click', () => {
+                // Load current preferences into modal
+                document.getElementById('functionalCookies').checked = cookiePreferences.functional;
+                document.getElementById('analyticsCookies').checked = cookiePreferences.analytics;
+                document.getElementById('advertisingCookies').checked = cookiePreferences.advertising;
+                modal.classList.add('show');
+            });
+        }
+        
+        // Close modal
+        if (closeModal) {
+            closeModal.addEventListener('click', () => {
+                modal.classList.remove('show');
+            });
+        }
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('show');
+            }
+        });
+        
+        // Save preferences
+        if (savePreferences) {
+            savePreferences.addEventListener('click', () => {
+                cookiePreferences = {
+                    functional: document.getElementById('functionalCookies').checked,
+                    analytics: document.getElementById('analyticsCookies').checked,
+                    advertising: document.getElementById('advertisingCookies').checked
+                };
+                saveCookiePreferences('custom');
+                modal.classList.remove('show');
+                cookieBanner.classList.remove('show');
+                showToast('Your cookie preferences have been saved.');
+                applyCookiePreferences();
+            });
+        }
+    }
+    
+    function saveCookiePreferences(type) {
+        localStorage.setItem('cookie_consent_given', 'true');
+        localStorage.setItem('cookie_consent_type', type);
+        localStorage.setItem('cookie_preferences', JSON.stringify(cookiePreferences));
+        
+        // Log consent for GDPR compliance
+        console.log('Cookie preferences saved:', {
+            type: type,
+            preferences: cookiePreferences,
+            timestamp: new Date().toISOString()
+        });
+    }
+    
+    function applyCookiePreferences() {
+        // Apply analytics cookies (Google Analytics, etc.)
+        if (cookiePreferences.analytics) {
+            console.log('Analytics cookies enabled');
+            // You can initialize Google Analytics here
+        } else {
+            console.log('Analytics cookies disabled');
+        }
+        
+        // Apply advertising cookies
+        if (cookiePreferences.advertising) {
+            console.log('Advertising cookies enabled');
+            // You can initialize ad networks here
+        } else {
+            console.log('Advertising cookies disabled');
+            // Block ad scripts if needed
+        }
+        
+        // Apply functional cookies
+        if (cookiePreferences.functional) {
+            console.log('Functional cookies enabled');
+            // Restore user preferences
+            restoreUserPreferences();
+        }
+    }
+    
+    function restoreUserPreferences() {
+        // Restore any saved user preferences (like last selected server)
+        const lastServer = localStorage.getItem('last_selected_server');
+        if (lastServer && !isNaN(parseInt(lastServer))) {
+            switchServer(parseInt(lastServer));
+        }
+    }
+    
+    // Save last selected server
+    function saveLastServer(serverId) {
+        if (localStorage.getItem('cookie_consent_given') === 'true') {
+            const prefs = JSON.parse(localStorage.getItem('cookie_preferences') || '{}');
+            if (prefs.functional !== false) {
+                localStorage.setItem('last_selected_server', serverId);
+            }
+        }
+    }
+    
+    // Override switchServer to save preference
+    const originalSwitchServer = switchServer;
+    window.switchServer = function(serverId) {
+        originalSwitchServer(serverId);
+        saveLastServer(serverId);
+    };
+    
     // Initialize ads
     function initAds() {
-        console.log("Ad network scripts loaded - ads will appear in designated containers");
+        console.log("Ad network scripts loaded");
     }
 
     // Initialize everything
@@ -235,15 +394,15 @@
         initViewerCounter();
         initSocialShare();
         initNavigation();
+        initCookieConsent();
         initAds();
         
-        // Load default server
         if (playerFrame && SERVERS[0]) {
             playerFrame.src = SERVERS[0].url;
             currentChannelNameSpan.innerText = SERVERS[0].name;
         }
         
-        showToast('Welcome to HD4STATION! Tap any channel to play');
+        showToast('Welcome to CHALUNG Live TV! Tap any channel to play');
     }
 
     if (document.readyState === 'loading') {
