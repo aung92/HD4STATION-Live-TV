@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang='en' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
+<html lang="en">
 <head>
-    <meta charset='UTF-8'/>
-    <meta content='width=device-width, initial-scale=1.0, viewport-fit=cover' name='viewport'/>
-    <title>HD4STATION — Live TV</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>HD4STATION — Live TV | Premium Streams</title>
     <style>
-        /* ========== RESET & GLOBAL ========== */
+        /* ----- RESET & GLOBAL ----- */
         * {
             margin: 0;
             padding: 0;
@@ -19,14 +19,14 @@
             overflow-x: hidden;
         }
 
-        /* ========== LIVE TV PAGE STYLES ========== */
+        /* ----- MAIN CONTAINER ----- */
         .ltv-page-container {
             max-width: 1600px;
             margin: 0 auto;
             padding: 24px 28px 60px;
         }
 
-        /* header area */
+        /* ----- HEADER / BRANDING ----- */
         .ltv-header {
             display: flex;
             align-items: center;
@@ -83,7 +83,7 @@
             50% { opacity: 0.5; transform: scale(1.2);}
         }
 
-        /* server tabs */
+        /* ----- SERVER TABS (MODERN) ----- */
         .ltv-server-tabs {
             display: flex;
             gap: 12px;
@@ -121,7 +121,7 @@
             border-radius: 40px 40px 0 0;
         }
 
-        /* ========== ENHANCED PLAYER AREA (LARGER) ========== */
+        /* ----- ENHANCED PLAYER (LARGER & IMMERSIVE) ----- */
         .ltv-player-section {
             margin-bottom: 40px;
         }
@@ -134,7 +134,6 @@
             border: 1px solid rgba(255,255,255,0.12);
             transition: all 0.2s;
         }
-        /* BIGGER ASPECT RATIO with increased size */
         .player-container {
             position: relative;
             width: 100%;
@@ -180,7 +179,6 @@
         .player-frame {
             width: 100%;
             height: 100%;
-            border: none;
             background: #000;
         }
         .player-frame iframe {
@@ -189,7 +187,7 @@
             border: none;
         }
 
-        /* ========== SCROLLABLE CHANNELS (HORIZONTAL) ========== */
+        /* ----- SCROLLABLE CHANNELS (HORIZONTAL) ----- */
         .channels-section {
             margin: 28px 0 32px;
         }
@@ -219,7 +217,6 @@
             align-items: center;
             gap: 6px;
         }
-        /* horizontal scroll container */
         .channel-scroll {
             overflow-x: auto;
             overflow-y: hidden;
@@ -246,7 +243,6 @@
             min-width: min-content;
             padding: 6px 2px 8px;
         }
-        /* channel card */
         .channel-card {
             flex-shrink: 0;
             width: 220px;
@@ -315,7 +311,7 @@
             display: inline-block;
         }
 
-        /* ========== INFO GRID (SERVER CARDS) ========== */
+        /* ----- INFO GRID (SERVER CARDS) ----- */
         .servers-info-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -373,9 +369,33 @@
             border-radius: 60px;
             color: #FF4D4D;
             white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
-        /* ========== RESPONSIVE (MOBILE, TABLET) ========== */
+        /* ----- TOAST NOTIFICATION ----- */
+        .toast-message {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            background: #0D1320;
+            border-left: 4px solid #00C4B4;
+            padding: 12px 20px;
+            border-radius: 16px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 9999;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            animation: fadeInUp 0.2s ease;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /* ----- RESPONSIVE (MOBILE, TABLET) ----- */
         @media (max-width: 900px) {
             .ltv-page-container {
                 padding: 16px 18px 40px;
@@ -470,40 +490,14 @@
                 font-size: 11px;
             }
         }
-
-        /* toast */
-        .toast-message {
-            position: fixed;
-            bottom: 28px;
-            right: 28px;
-            background: #0D1320;
-            border-left: 4px solid #00C4B4;
-            padding: 12px 20px;
-            border-radius: 16px;
-            color: white;
-            font-size: 14px;
-            font-weight: 600;
-            z-index: 9999;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            animation: fadeInUp 0.2s ease;
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px);}
-            to { opacity: 1; transform: translateY(0);}
-        }
-        .hidden {
-            display: none;
-        }
     </style>
-    <!-- Font Awesome & Google Fonts -->
-    <link href='https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap' rel='stylesheet'/>
-    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css'/>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
-<!-- MAIN LIVE TV SECTION (FULLY RESPONSIVE + ENLARGED PLAYER + SCROLLABLE CHANNELS) -->
 <div class="ltv-page-container">
-    <!-- Header with HD4STATION branding -->
+    <!-- Header Section -->
     <div class="ltv-header">
         <div class="ltv-brand">
             <div class="ltv-brand-icon">
@@ -511,14 +505,14 @@
             </div>
             <div class="ltv-brand-text">
                 <h1>HD4STATION Live TV</h1>
-                <p><span class="live-pulse"></span> 24/7 Direct Streams · HD Quality</p>
+                <p><span class="live-pulse"></span> 24/7 Direct Streams · Ultra HD Quality</p>
             </div>
         </div>
     </div>
 
     <!-- Server Selector Tabs -->
     <div class="ltv-server-tabs" id="serverTabsContainer">
-        <button class="server-tab-btn" data-server="0">
+        <button class="server-tab-btn active" data-server="0">
             <i class="fas fa-server"></i> <span>Server 1 · Mirraby</span>
         </button>
         <button class="server-tab-btn" data-server="1">
@@ -526,7 +520,7 @@
         </button>
     </div>
 
-    <!-- ENLARGED PLAYER SECTION (BIGGER AREA) -->
+    <!-- Enhanced Player Area (larger, modern) -->
     <div class="ltv-player-section">
         <div class="player-wrapper">
             <div class="player-container">
@@ -540,29 +534,26 @@
         </div>
     </div>
 
-    <!-- SCROLLABLE CHANNELS LIST (fully responsive, horizontal scroll) -->
+    <!-- Scrollable Channels Section (Horizontal) -->
     <div class="channels-section">
         <div class="section-head">
             <h3><i class="fas fa-satellite-dish"></i> Available Channels</h3>
             <div class="scroll-hint"><i class="fas fa-arrows-alt-h"></i> Swipe or scroll →</div>
         </div>
         <div class="channel-scroll" id="channelScrollWrapper">
-            <div class="channel-grid" id="channelGrid">
-                <!-- dynamic channels from JS -->
-            </div>
+            <div class="channel-grid" id="channelGrid"></div>
         </div>
     </div>
 
     <!-- Server Info Cards (Quick selection) -->
-    <div class="servers-info-grid" id="serverInfoGrid">
-        <!-- populated dynamically -->
-    </div>
+    <div class="servers-info-grid" id="serverInfoGrid"></div>
 </div>
 
 <script>
     (function() {
-        // HD4STATION LIVE TV MODULE
-        // Server list (original sources)
+        // ========================
+        // HD4STATION LIVE TV ENGINE
+        // ========================
         const SERVERS = [
             {
                 id: 0,
@@ -570,7 +561,8 @@
                 short: 'Server 1',
                 url: 'https://web.mswott.net/p?url=https%3A%2F%2Fmirraby.mswott.top%2FMSW%2FNai%2Fkhai%2Ffaka.php&__src=https%3A%2F%2Fmirraby.mswott.top%2FMSW%2FNai%2Fkhai%2Ffaka.php&__type=document',
                 icon: 'fa-play-circle',
-                quality: 'HD 1080p'
+                quality: 'HD 1080p',
+                tag: 'Mirror Link'
             },
             {
                 id: 1,
@@ -578,11 +570,12 @@
                 short: 'Server 2',
                 url: 'https://web.mswott.net/p?url=http%3A%2F%2F103.144.89.251%2F&__src=http%3A%2F%2F103.144.89.251%2F&__type=document',
                 icon: 'fa-tower-broadcast',
-                quality: 'HD Live'
+                quality: 'HD Live',
+                tag: 'Direct Stream'
             }
         ];
 
-        let activeServerId = 0;   // default server 0
+        let activeServerId = 0;   // default Mirraby
 
         // DOM elements
         const playerFrame = document.getElementById('livePlayerIframe');
@@ -590,30 +583,33 @@
         const serverInfoGridEl = document.getElementById('serverInfoGrid');
         const tabButtons = document.querySelectorAll('.server-tab-btn');
 
-        // Helper: show toast message
-        function showToast(msg, type = 'info') {
+        // Toast notification helper
+        function showToast(message, type = 'info') {
             let existingToast = document.querySelector('.toast-message');
-            if(existingToast) existingToast.remove();
+            if (existingToast) existingToast.remove();
             const toast = document.createElement('div');
             toast.className = 'toast-message';
-            toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}" style="margin-right: 8px; color: #00C4B4;"></i> ${msg}`;
+            toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}" style="margin-right: 8px; color: #00C4B4;"></i> ${message}`;
             document.body.appendChild(toast);
             setTimeout(() => {
-                if(toast) toast.remove();
+                if (toast && toast.remove) toast.remove();
             }, 2800);
         }
 
-        // Switch server (main function)
+        // Core switch server logic — updates player, UI tabs, channel cards, info cards
         function switchServer(serverId, updateActiveUI = true) {
-            const server = SERVERS.find(s => s.id === serverId);
-            if (!server) return;
+            const targetServer = SERVERS.find(s => s.id === serverId);
+            if (!targetServer) return;
+            
             activeServerId = serverId;
+            
             // Update iframe source
             if (playerFrame) {
-                playerFrame.src = server.url;
+                playerFrame.src = targetServer.url;
             }
-            // Update active states for tabs
+            
             if (updateActiveUI) {
+                // Update server tabs active state
                 tabButtons.forEach(btn => {
                     const btnServer = parseInt(btn.getAttribute('data-server'), 10);
                     if (btnServer === serverId) {
@@ -623,6 +619,7 @@
                     }
                 });
             }
+            
             // Update channel cards active highlight
             const channelCards = document.querySelectorAll('.channel-card');
             channelCards.forEach(card => {
@@ -633,6 +630,7 @@
                     card.classList.remove('active');
                 }
             });
+            
             // Update info cards active style
             const infoCards = document.querySelectorAll('.server-info-card');
             infoCards.forEach(card => {
@@ -643,10 +641,11 @@
                     card.classList.remove('active-info');
                 }
             });
-            showToast(`Switched to ${server.name}`, 'success');
+            
+            showToast(`✓ Switched to ${targetServer.name} (${targetServer.quality})`, 'success');
         }
-
-        // Build channel list (horizontal scrollable)
+        
+        // Build horizontal scrollable channel list (modern design)
         function buildChannelList() {
             if (!channelGrid) return;
             channelGrid.innerHTML = '';
@@ -662,7 +661,7 @@
                     </div>
                     <div class="channel-name">${server.name}</div>
                     <div class="channel-status"><i class="fas fa-circle" style="font-size: 8px; color:#30E3A0;"></i> LIVE</div>
-                    <span class="channel-badge">${server.quality || 'HD'}</span>
+                    <span class="channel-badge">${server.quality}</span>
                 `;
                 card.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -671,8 +670,8 @@
                 channelGrid.appendChild(card);
             });
         }
-
-        // Build server info grid (larger cards)
+        
+        // Build secondary server info grid (rich cards with live indicator)
         function buildServerInfoGrid() {
             if (!serverInfoGridEl) return;
             serverInfoGridEl.innerHTML = '';
@@ -687,7 +686,7 @@
                     </div>
                     <div class="info-content">
                         <div class="info-title">${server.name}</div>
-                        <div class="info-desc">${server.quality} · 24/7 Stable</div>
+                        <div class="info-desc">${server.quality} · 24/7 Stable · ${server.tag || 'UltraFast'}</div>
                     </div>
                     <div class="live-tag"><span class="live-pulse" style="display: inline-block; width:6px; height:6px; margin-right: 6px;"></span> LIVE</div>
                 `;
@@ -697,8 +696,8 @@
                 serverInfoGridEl.appendChild(infoCard);
             });
         }
-
-        // Initialize tabs click handlers
+        
+        // Initialize tab button handlers
         function initTabs() {
             tabButtons.forEach(btn => {
                 btn.addEventListener('click', (e) => {
@@ -709,39 +708,60 @@
                 });
             });
         }
-
-        // Make channel scroll area smooth + ensure proper display after resize
-        function ensureScrollable() {
+        
+        // Ensure scroll container has smooth behavior + optional active channel scroll into view
+        function enhanceScrollExperience() {
             const scrollContainer = document.getElementById('channelScrollWrapper');
             if (scrollContainer) {
-                // just add smooth style
                 scrollContainer.style.scrollBehavior = 'smooth';
-                // optional: initial scroll to active channel? not needed but nice.
+                // After UI is built, scroll to active channel (if needed for better UX)
+                setTimeout(() => {
+                    const activeChannel = document.querySelector('.channel-card.active');
+                    if (activeChannel && scrollContainer) {
+                        const containerRect = scrollContainer.getBoundingClientRect();
+                        const activeRect = activeChannel.getBoundingClientRect();
+                        // Only auto-scroll if active card is partially out of view on large screens
+                        if (activeRect.left < containerRect.left || activeRect.right > containerRect.right) {
+                            activeChannel.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                        }
+                    }
+                }, 100);
             }
         }
-
-        // initial load: set default active server (0) and build UI
+        
+        // Preload player, default settings, fallback protection
         function initLiveTV() {
             buildChannelList();
             buildServerInfoGrid();
             initTabs();
-            ensureScrollable();
-            // ensure the iframe loads the default server (0)
-            if (playerFrame && SERVERS[0]) {
-                playerFrame.src = SERVERS[0].url;
+            enhanceScrollExperience();
+            
+            // Set default server (id 0) into iframe if not already
+            const defaultServer = SERVERS.find(s => s.id === activeServerId) || SERVERS[0];
+            if (playerFrame && defaultServer) {
+                playerFrame.src = defaultServer.url;
             }
-            // set active UI for default
+            // Force UI synchronization with default active server
             switchServer(activeServerId, true);
-            // Add window resize observer to maintain any scroll issues (just in case)
+            
+            // Optional: listen for network errors and show friendly message (just robust)
+            if (playerFrame) {
+                playerFrame.addEventListener('error', () => {
+                    showToast("Stream connection issue, retrying...", "info");
+                });
+            }
+            
+            // Window resize: maintain any horizontal scroll issues
             window.addEventListener('resize', () => {
-                // re-trigger scroll container styling
-                if(document.getElementById('channelScrollWrapper')) {
-                    // nothing heavy, just ensure overflow
+                // re-trigger slight adjustment to scroll container if needed
+                const scrollWrap = document.getElementById('channelScrollWrapper');
+                if (scrollWrap && scrollWrap.scrollWidth > scrollWrap.clientWidth) {
+                    // just ensure scrollbar styling remains intact
                 }
             });
         }
-
-        // start everything after DOM ready
+        
+        // Start everything after DOM ready
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initLiveTV);
         } else {
@@ -749,7 +769,5 @@
         }
     })();
 </script>
-
-<!-- Optional: small inline to handle any Blogger conflicts, but fully functional -->
 </body>
 </html>
