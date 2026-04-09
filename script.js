@@ -1,5 +1,4 @@
 (function() {
-    // Server Configuration
     const SERVERS = [
         {
             id: 0,
@@ -19,60 +18,406 @@
 
     let activeServerId = 0;
     let isFullscreen = false;
+    
+    // Cookie preferences - Default values
+    let cookiePreferences = {
+        functional: true,
+        analytics: true,
+        advertising: true,
+        essential: true
+    };
+
     const playerFrame = document.getElementById('livePlayerIframe');
     const channelsGrid = document.getElementById('channelsGrid');
     const currentChannelNameSpan = document.getElementById('currentChannelName');
     const heroServerBtns = document.querySelectorAll('#heroServerSelector .server-btn-hero');
     const playerSection = document.getElementById('playerSection');
     const backToTopBtn = document.getElementById('backToTopBtn');
+    const datetimeBar = document.getElementById('datetimeBar');
 
-    // Cookie preferences
-    let cookiePreferences = {
-        functional: true,
-        analytics: true,
-        advertising: true
+    const CURRENT_YEAR = 2026;
+    
+    const HOLIDAYS = {
+        bangladesh: [
+            { name: "Bengali New Year (Pohela Boishakh)", date: "2026-04-14", type: "govt", icon: "fa-calendar-alt" },
+            { name: "International Mother Language Day", date: "2026-02-21", type: "govt", icon: "fa-language" },
+            { name: "Independence Day", date: "2026-03-26", type: "govt", icon: "fa-flag" },
+            { name: "Victory Day", date: "2026-12-16", type: "govt", icon: "fa-trophy" },
+            { name: "National Mourning Day", date: "2026-08-15", type: "govt", icon: "fa-heart" },
+            { name: "Birthday of Sheikh Mujibur Rahman", date: "2026-03-17", type: "govt", icon: "fa-star" },
+            { name: "May Day", date: "2026-05-01", type: "govt", icon: "fa-briefcase" },
+            { name: "Christmas Day", date: "2026-12-25", type: "govt", icon: "fa-church" },
+            { name: "Buddha Purnima", date: "2026-05-01", type: "govt", icon: "fa-pray" }
+        ],
+        international: [
+            { name: "New Year's Day", date: "2026-01-01", type: "international", icon: "fa-glass-cheers" },
+            { name: "International Women's Day", date: "2026-03-08", type: "international", icon: "fa-venus" },
+            { name: "Earth Day", date: "2026-04-22", type: "international", icon: "fa-globe" },
+            { name: "World Environment Day", date: "2026-06-05", type: "international", icon: "fa-leaf" },
+            { name: "International Youth Day", date: "2026-08-12", type: "international", icon: "fa-users" },
+            { name: "International Day of Peace", date: "2026-09-21", type: "international", icon: "fa-dove" },
+            { name: "United Nations Day", date: "2026-10-24", type: "international", icon: "fa-un" },
+            { name: "World Children's Day", date: "2026-11-20", type: "international", icon: "fa-child" },
+            { name: "Human Rights Day", date: "2026-12-10", type: "international", icon: "fa-gavel" }
+        ],
+        islamic: [
+            { name: "Shab-e-Barat", date: "2026-02-02", type: "islamic", icon: "fa-moon" },
+            { name: "Laylatul Qadr", date: "2026-04-16", type: "islamic", icon: "fa-star-of-life" },
+            { name: "Eid-ul-Fitr", date: "2026-04-20", type: "islamic", icon: "fa-star-and-crescent" },
+            { name: "Eid-ul-Azha", date: "2026-06-27", type: "islamic", icon: "fa-star-and-crescent" },
+            { name: "Ashura", date: "2026-07-26", type: "islamic", icon: "fa-hand-holding-heart" },
+            { name: "Eid-e-Milad-un-Nabi", date: "2026-09-25", type: "islamic", icon: "fa-praying-hands" }
+        ]
     };
 
-    // Analytics tracking
-    let analyticsEnabled = false;
-
-    // Toast notification
-    function showToast(message) {
+    // Helper Functions
+    function showToast(message, type = 'success') {
         const existing = document.querySelector('.toast-message');
         if (existing) existing.remove();
         const toast = document.createElement('div');
         toast.className = 'toast-message';
-        toast.innerHTML = `<i class="fas fa-check-circle" style="margin-right: 8px; color: #00C4B4;"></i> ${message}`;
+        const icon = type === 'success' ? 'fa-check-circle' : 'fa-info-circle';
+        toast.innerHTML = `<i class="fas ${icon}" style="margin-right: 8px; color: #00C4B4;"></i> ${message}`;
         document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 2500);
+        setTimeout(() => toast.remove(), 3000);
     }
 
-    // Analytics tracking function
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
     function trackEvent(eventName, eventData = {}) {
-        if (analyticsEnabled) {
+        if (cookiePreferences.analytics) {
             console.log(`[Analytics] ${eventName}:`, eventData);
-            // You can send to Google Analytics or other analytics service here
         }
     }
 
-    // Scroll to player smoothly
-    function scrollToPlayer() {
-        playerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        trackEvent('scroll_to_player', { timestamp: new Date().toISOString() });
+    // ========== COOKIE MANAGEMENT SYSTEM ==========
+    function initCookieConsent() {
+        const cookieBanner = document.getElementById('cookieConsent');
+        const acceptBtn = document.getElementById('cookieAcceptBtn');
+        const denyBtn = document.getElementById('cookieDenyBtn');
+        const settingsBtn = document.getElementById('cookieSettingsBtn');
+        const settingsModal = document.getElementById('cookieSettingsModal');
+        const closeSettingsModal = document.getElementById('closeSettingsModal');
+        const savePreferencesBtn = document.getElementById('saveCookiePreferencesBtn');
+        
+        // Load saved preferences
+        const savedConsent = localStorage.getItem('cookie_consent_given');
+        const savedPreferences = localStorage.getItem('cookie_preferences');
+        
+        if (savedPreferences) {
+            try {
+                cookiePreferences = JSON.parse(savedPreferences);
+            } catch(e) {
+                console.log('Error parsing saved preferences');
+            }
+        }
+        
+        // Show banner only if no consent given
+        if (!savedConsent) {
+            setTimeout(() => {
+                if (cookieBanner) cookieBanner.classList.add('show');
+            }, 500);
+        } else {
+            applyCookiePreferences();
+        }
+        
+        // Accept All Cookies
+        if (acceptBtn) {
+            acceptBtn.addEventListener('click', () => {
+                cookiePreferences = {
+                    essential: true,
+                    functional: true,
+                    analytics: true,
+                    advertising: true
+                };
+                saveCookiePreferences('all');
+                if (cookieBanner) cookieBanner.classList.remove('show');
+                showToast('All cookies accepted! Thank you for your preference.', 'success');
+                applyCookiePreferences();
+            });
+        }
+        
+        // Deny Optional Cookies (only essential)
+        if (denyBtn) {
+            denyBtn.addEventListener('click', () => {
+                cookiePreferences = {
+                    essential: true,
+                    functional: false,
+                    analytics: false,
+                    advertising: false
+                };
+                saveCookiePreferences('essential');
+                if (cookieBanner) cookieBanner.classList.remove('show');
+                showToast('Only essential cookies enabled. You can change this anytime in settings.', 'info');
+                applyCookiePreferences();
+            });
+        }
+        
+        // Open Settings Modal
+        if (settingsBtn) {
+            settingsBtn.addEventListener('click', () => {
+                // Load current preferences into modal
+                const functionalToggle = document.getElementById('functionalCookiesToggle');
+                const analyticsToggle = document.getElementById('analyticsCookiesToggle');
+                const advertisingToggle = document.getElementById('advertisingCookiesToggle');
+                
+                if (functionalToggle) functionalToggle.checked = cookiePreferences.functional;
+                if (analyticsToggle) analyticsToggle.checked = cookiePreferences.analytics;
+                if (advertisingToggle) advertisingToggle.checked = cookiePreferences.advertising;
+                
+                if (settingsModal) settingsModal.classList.add('show');
+            });
+        }
+        
+        // Close Settings Modal
+        if (closeSettingsModal) {
+            closeSettingsModal.addEventListener('click', () => {
+                if (settingsModal) settingsModal.classList.remove('show');
+            });
+        }
+        
+        // Close modal on outside click
+        window.addEventListener('click', (e) => {
+            if (e.target === settingsModal) {
+                settingsModal.classList.remove('show');
+            }
+        });
+        
+        // Save Preferences
+        if (savePreferencesBtn) {
+            savePreferencesBtn.addEventListener('click', () => {
+                const functionalToggle = document.getElementById('functionalCookiesToggle');
+                const analyticsToggle = document.getElementById('analyticsCookiesToggle');
+                const advertisingToggle = document.getElementById('advertisingCookiesToggle');
+                
+                cookiePreferences = {
+                    essential: true,
+                    functional: functionalToggle ? functionalToggle.checked : false,
+                    analytics: analyticsToggle ? analyticsToggle.checked : false,
+                    advertising: advertisingToggle ? advertisingToggle.checked : false
+                };
+                
+                saveCookiePreferences('custom');
+                if (settingsModal) settingsModal.classList.remove('show');
+                if (cookieBanner) cookieBanner.classList.remove('show');
+                showToast('Your cookie preferences have been saved!', 'success');
+                applyCookiePreferences();
+            });
+        }
+    }
+    
+    function saveCookiePreferences(type) {
+        localStorage.setItem('cookie_consent_given', 'true');
+        localStorage.setItem('cookie_consent_type', type);
+        localStorage.setItem('cookie_preferences', JSON.stringify(cookiePreferences));
+        
+        console.log('Cookie preferences saved:', {
+            type: type,
+            preferences: cookiePreferences,
+            timestamp: new Date().toISOString()
+        });
+    }
+    
+    function applyCookiePreferences() {
+        console.log('Applying cookie preferences:', cookiePreferences);
+        
+        // Apply Functional Cookies (remember user preferences)
+        if (cookiePreferences.functional) {
+            restoreUserPreferences();
+        }
+        
+        // Apply Analytics Cookies
+        if (cookiePreferences.analytics) {
+            console.log('Analytics tracking enabled');
+            initializeAnalytics();
+        } else {
+            console.log('Analytics tracking disabled');
+        }
+        
+        // Apply Advertising Cookies
+        if (cookiePreferences.advertising) {
+            console.log('Advertising cookies enabled');
+            initializeAdvertising();
+        } else {
+            console.log('Advertising cookies disabled');
+        }
+    }
+    
+    function initializeAnalytics() {
+        trackEvent('page_view', { timestamp: new Date().toISOString() });
+    }
+    
+    function initializeAdvertising() {
+        console.log('[Advertising] Ads initialized');
+    }
+    
+    function restoreUserPreferences() {
+        const lastServer = localStorage.getItem('last_selected_server');
+        if (lastServer && !isNaN(parseInt(lastServer))) {
+            switchServer(parseInt(lastServer));
+        }
+    }
+    
+    function saveLastServer(serverId) {
+        if (cookiePreferences.functional) {
+            localStorage.setItem('last_selected_server', serverId);
+        }
+    }
+    
+    // Cookie Settings Footer Link
+    function initCookieSettingsFooter() {
+        const cookieSettingsFooter = document.getElementById('cookieSettingsFooter');
+        const settingsModal = document.getElementById('cookieSettingsModal');
+        
+        if (cookieSettingsFooter) {
+            cookieSettingsFooter.addEventListener('click', (e) => {
+                e.preventDefault();
+                // Load current preferences
+                const functionalToggle = document.getElementById('functionalCookiesToggle');
+                const analyticsToggle = document.getElementById('analyticsCookiesToggle');
+                const advertisingToggle = document.getElementById('advertisingCookiesToggle');
+                
+                if (functionalToggle) functionalToggle.checked = cookiePreferences.functional;
+                if (analyticsToggle) analyticsToggle.checked = cookiePreferences.analytics;
+                if (advertisingToggle) advertisingToggle.checked = cookiePreferences.advertising;
+                
+                if (settingsModal) settingsModal.classList.add('show');
+            });
+        }
     }
 
-    // Load stream
+    // ========== DATE & TIME FUNCTIONS ==========
+    function initFloatingDateTimeBar() {
+        if (!datetimeBar) return;
+        const originalOffset = datetimeBar.offsetTop;
+        
+        function checkScroll() {
+            if (window.scrollY > originalOffset + 50) {
+                datetimeBar.classList.add('floating');
+                document.body.classList.add('has-floating-datetime');
+            } else {
+                datetimeBar.classList.remove('floating');
+                document.body.classList.remove('has-floating-datetime');
+            }
+        }
+        
+        window.addEventListener('scroll', checkScroll);
+        checkScroll();
+    }
+
+    function updateDateTime() {
+        const now = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+        
+        const dateElement = document.getElementById('currentDate');
+        const timeElement = document.getElementById('currentTime');
+        
+        if (dateElement) dateElement.textContent = now.toLocaleDateString('en-US', options);
+        if (timeElement) timeElement.textContent = now.toLocaleTimeString('en-US', timeOptions);
+        
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const timezoneElement = document.getElementById('timezone');
+        if (timezoneElement) {
+            const shortTimezone = timezone.split('/').pop().replace('_', ' ');
+            timezoneElement.textContent = shortTimezone;
+        }
+        
+        updateNextHolidayInfo();
+    }
+
+    // ========== HOLIDAY FUNCTIONS ==========
+    function getAllHolidays() {
+        return [...HOLIDAYS.bangladesh, ...HOLIDAYS.international, ...HOLIDAYS.islamic];
+    }
+
+    function checkTodayHoliday() {
+        const today = new Date();
+        const todayStr = today.toISOString().split('T')[0];
+        for (const holiday of getAllHolidays()) {
+            if (holiday.date === todayStr) return holiday;
+        }
+        return null;
+    }
+
+    function getNextUpcomingHoliday() {
+        const today = new Date();
+        const todayStr = today.toISOString().split('T')[0];
+        const futureHolidays = getAllHolidays().filter(h => h.date > todayStr);
+        futureHolidays.sort((a, b) => new Date(a.date) - new Date(b.date));
+        return futureHolidays[0] || null;
+    }
+
+    function formatShortDate(dateStr) {
+        const date = new Date(dateStr);
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+
+    function getDaysRemaining(targetDate) {
+        const today = new Date();
+        const target = new Date(targetDate);
+        const diffTime = target - today;
+        return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    }
+
+    function updateNextHolidayInfo() {
+        const nextHoliday = getNextUpcomingHoliday();
+        const nextHolidayElement = document.getElementById('nextHolidayInfo');
+        
+        if (nextHoliday && nextHolidayElement) {
+            const daysLeft = getDaysRemaining(nextHoliday.date);
+            if (daysLeft === 1) {
+                nextHolidayElement.innerHTML = `Next: ${nextHoliday.name} (Tomorrow)`;
+            } else if (daysLeft === 0) {
+                nextHolidayElement.innerHTML = `${nextHoliday.name} - TODAY! 🎉`;
+            } else {
+                nextHolidayElement.innerHTML = `Next: ${nextHoliday.name} (${formatShortDate(nextHoliday.date)}) - ${daysLeft} days left`;
+            }
+        } else if (nextHolidayElement) {
+            nextHolidayElement.innerHTML = `No more holidays in ${CURRENT_YEAR}`;
+        }
+    }
+
+    function displayCurrentHoliday() {
+        const holiday = checkTodayHoliday();
+        const displayDiv = document.getElementById('currentHolidayDisplay');
+        
+        if (holiday && displayDiv) {
+            let typeLabel = "";
+            if (holiday.type === "govt") typeLabel = "Bangladesh Government Holiday";
+            else if (holiday.type === "international") typeLabel = "International Holiday";
+            else if (holiday.type === "islamic") typeLabel = "Islamic Holiday";
+            
+            document.getElementById('currentHolidayName').innerHTML = `${holiday.name}`;
+            document.getElementById('currentHolidayType').textContent = typeLabel;
+            displayDiv.style.display = 'block';
+        } else if (displayDiv) {
+            displayDiv.style.display = 'none';
+        }
+    }
+
+    // ========== STREAMING FUNCTIONS ==========
+    function scrollToPlayer() {
+        playerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
     function loadStream(serverId) {
         const server = SERVERS.find(s => s.id === serverId);
         if (server && playerFrame) {
             playerFrame.src = server.url;
             currentChannelNameSpan.innerText = server.name;
-            showToast(`Now playing: ${server.name}`);
-            trackEvent('stream_started', { server: server.name, serverId: serverId });
+            showToast(`Now playing: ${server.name}`, 'success');
         }
     }
 
-    // Switch server with auto-scroll to player
     function switchServer(serverId) {
         const server = SERVERS.find(s => s.id === serverId);
         if (!server) return;
@@ -91,10 +436,9 @@
             card.classList.toggle('active', cardId === serverId);
         });
         
-        trackEvent('server_switched', { server: server.name, serverId: serverId });
+        saveLastServer(serverId);
     }
 
-    // Build channels grid
     function buildChannels() {
         if (!channelsGrid) return;
         channelsGrid.innerHTML = '';
@@ -103,33 +447,16 @@
             card.className = `channel-item ${server.id === activeServerId ? 'active' : ''}`;
             card.dataset.serverId = server.id;
             card.innerHTML = `
-                <div class="channel-icon-lg">
-                    <i class="fas ${server.icon}"></i>
-                </div>
+                <div class="channel-icon-lg"><i class="fas ${server.icon}"></i></div>
                 <div class="channel-name">${escapeHtml(server.name)}</div>
-                <div class="channel-quality">
-                    <i class="fas fa-circle" style="font-size: 6px; color:#30E3A0;"></i> ${server.quality}
-                </div>
+                <div class="channel-quality"><i class="fas fa-circle" style="font-size: 6px; color:#30E3A0;"></i> ${server.quality}</div>
             `;
-            card.addEventListener('click', () => {
-                switchServer(server.id);
-                trackEvent('channel_clicked', { channel: server.name });
-            });
+            card.addEventListener('click', () => switchServer(server.id));
             channelsGrid.appendChild(card);
         });
     }
 
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
-
-    // Fullscreen functionality
+    // ========== UI FUNCTIONS ==========
     function initFullscreen() {
         const fullscreenBtn = document.getElementById('fullscreenBtn');
         const playerWrapper = document.querySelector('.player-wrapper');
@@ -137,108 +464,131 @@
         if (fullscreenBtn && playerWrapper) {
             fullscreenBtn.addEventListener('click', () => {
                 const iframe = document.getElementById('livePlayerIframe');
-                if (iframe.requestFullscreen) {
-                    iframe.requestFullscreen();
-                    trackEvent('fullscreen_entered', {});
-                } else if (playerWrapper.requestFullscreen) {
-                    playerWrapper.requestFullscreen();
-                    trackEvent('fullscreen_entered', {});
-                }
+                if (iframe.requestFullscreen) iframe.requestFullscreen();
+                else if (playerWrapper.requestFullscreen) playerWrapper.requestFullscreen();
             });
         }
         
-        document.addEventListener('fullscreenchange', handleFullscreenChange);
-        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-        document.addEventListener('mozfullscreenchange', handleFullscreenChange);
-        document.addEventListener('MSFullscreenChange', handleFullscreenChange);
-    }
-    
-    function handleFullscreenChange() {
-        isFullscreen = !!document.fullscreenElement;
-        const backToTop = document.getElementById('backToTopBtn');
-        if (backToTop) {
-            backToTop.style.display = isFullscreen ? 'none' : 'flex';
-        }
-        if (!isFullscreen) {
-            trackEvent('fullscreen_exited', {});
-        }
+        document.addEventListener('fullscreenchange', () => {
+            isFullscreen = !!document.fullscreenElement;
+            const backToTop = document.getElementById('backToTopBtn');
+            if (backToTop) backToTop.style.display = isFullscreen ? 'none' : 'flex';
+        });
     }
 
-    // Back to Top functionality
     function initBackToTop() {
         if (!backToTopBtn) return;
-        
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) {
-                backToTopBtn.classList.add('show');
-            } else {
-                backToTopBtn.classList.remove('show');
-            }
+            backToTopBtn.classList.toggle('show', window.scrollY > 300);
         });
-        
         backToTopBtn.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            trackEvent('back_to_top_clicked', { scrollY: window.scrollY });
         });
     }
 
-    // Live viewers counter
     function initViewerCounter() {
         const viewerSpan = document.getElementById('liveViewers');
         if (viewerSpan) {
             setInterval(() => {
                 let curr = parseInt(viewerSpan.innerText.replace(/,/g, '')) || 1284;
                 let change = Math.floor(Math.random() * 15) - 5;
-                let newVal = Math.max(800, curr + change);
-                viewerSpan.innerText = newVal.toLocaleString();
+                viewerSpan.innerText = Math.max(800, curr + change).toLocaleString();
             }, 25000);
         }
     }
 
-    // Social sharing with tracking
-    function initSocialShare() {
+    // ========== SOCIAL ICONS FUNCTIONALITY ==========
+    function initFloatingSocialIcons() {
         const url = encodeURIComponent(window.location.href);
         const text = encodeURIComponent("Watch CHALUNG Live TV - Premium HD Streaming!");
         
-        document.getElementById('shareFb')?.addEventListener('click', (e) => {
-            e.preventDefault();
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
-            trackEvent('social_share', { platform: 'facebook' });
-        });
-        document.getElementById('shareTw')?.addEventListener('click', (e) => {
-            e.preventDefault();
-            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
-            trackEvent('social_share', { platform: 'twitter' });
-        });
-        document.getElementById('shareWa')?.addEventListener('click', (e) => {
-            e.preventDefault();
-            window.open(`https://wa.me/?text=${text}%20${url}`, '_blank');
-            trackEvent('social_share', { platform: 'whatsapp' });
-        });
+        const floatingFb = document.getElementById('floatingFb');
+        if (floatingFb) {
+            floatingFb.addEventListener('click', () => {
+                window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+                showToast('Sharing on Facebook', 'info');
+            });
+        }
+        
+        const floatingTw = document.getElementById('floatingTw');
+        if (floatingTw) {
+            floatingTw.addEventListener('click', () => {
+                window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+                showToast('Sharing on Twitter', 'info');
+            });
+        }
+        
+        const floatingWa = document.getElementById('floatingWa');
+        if (floatingWa) {
+            floatingWa.addEventListener('click', () => {
+                window.open(`https://wa.me/?text=${text}%20${url}`, '_blank');
+                showToast('Sharing on WhatsApp', 'info');
+            });
+        }
+        
+        const floatingLink = document.getElementById('floatingLink');
+        if (floatingLink) {
+            floatingLink.addEventListener('click', () => {
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    showToast('Link copied to clipboard!', 'success');
+                }).catch(() => {
+                    showToast('Failed to copy link', 'error');
+                });
+            });
+        }
+        
+        const floatingShare = document.getElementById('floatingShare');
+        if (floatingShare) {
+            floatingShare.addEventListener('click', () => {
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'CHALUNG Live TV',
+                        text: 'Watch premium HD live TV for free!',
+                        url: window.location.href
+                    }).catch(() => {});
+                } else {
+                    showToast('Share feature supported on mobile devices', 'info');
+                }
+            });
+        }
+        
+        const shareFbFooter = document.getElementById('shareFbFooter');
+        if (shareFbFooter) {
+            shareFbFooter.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+            });
+        }
+        
+        const shareTwFooter = document.getElementById('shareTwFooter');
+        if (shareTwFooter) {
+            shareTwFooter.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+            });
+        }
+        
+        const shareWaFooter = document.getElementById('shareWaFooter');
+        if (shareWaFooter) {
+            shareWaFooter.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.open(`https://wa.me/?text=${text}%20${url}`, '_blank');
+            });
+        }
     }
 
-    // Navigation links
     function initNavigation() {
-        const navLinks = document.querySelectorAll('.nav-links a[data-nav]');
-        navLinks.forEach(link => {
+        document.querySelectorAll('.nav-links a[data-nav]').forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
                 const target = link.dataset.nav;
-                if (target === 'home') {
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                    trackEvent('nav_click', { target: 'home' });
-                } else if (target === 'channels') {
-                    document.getElementById('channelsSection')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    trackEvent('nav_click', { target: 'channels' });
-                } else if (target === 'features') {
-                    document.getElementById('featuresSection')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    trackEvent('nav_click', { target: 'features' });
-                }
+                if (target === 'home') window.scrollTo({ top: 0, behavior: 'smooth' });
+                else if (target === 'channels') document.getElementById('channelsSection')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                else if (target === 'features') document.getElementById('featuresSection')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
         });
     }
 
-    // Hero server buttons
     function initHeroButtons() {
         heroServerBtns.forEach(btn => {
             btn.addEventListener('click', () => {
@@ -248,264 +598,147 @@
         });
     }
 
-    // Modal Functions
+    // ========== MODAL FUNCTIONS ==========
     function initModals() {
+        // Holidays Modal
+        const holidaysBtn = document.getElementById('holidaysLinkBtn');
+        const holidaysFooterBtn = document.getElementById('holidaysFooterBtn');
+        const holidaysModal = document.getElementById('holidaysModal');
+        const closeHolidaysModal = document.getElementById('closeHolidaysModal');
+        const closeHolidaysBtn = document.getElementById('closeHolidaysBtn');
+        
+        const openHolidaysModal = () => {
+            buildHolidaysModalContent();
+            if (holidaysModal) holidaysModal.classList.add('show');
+        };
+        
+        if (holidaysBtn) holidaysBtn.addEventListener('click', openHolidaysModal);
+        if (holidaysFooterBtn) holidaysFooterBtn.addEventListener('click', openHolidaysModal);
+        if (closeHolidaysModal) closeHolidaysModal.addEventListener('click', () => holidaysModal.classList.remove('show'));
+        if (closeHolidaysBtn) closeHolidaysBtn.addEventListener('click', () => holidaysModal.classList.remove('show'));
+        
         // Privacy Modal
-        const privacyBtn = document.getElementById('privacyLinkBtn');
         const privacyFooterBtn = document.getElementById('privacyFooterBtn');
         const privacyModal = document.getElementById('privacyModal');
         const closePrivacy = document.getElementById('closePrivacyModal');
         const closePrivacyBtn = document.getElementById('closePrivacyBtn');
         
+        const openPrivacy = () => { if (privacyModal) privacyModal.classList.add('show'); };
+        if (privacyFooterBtn) privacyFooterBtn.addEventListener('click', openPrivacy);
+        if (closePrivacy) closePrivacy.addEventListener('click', () => privacyModal.classList.remove('show'));
+        if (closePrivacyBtn) closePrivacyBtn.addEventListener('click', () => privacyModal.classList.remove('show'));
+        
         // Legal Modal
-        const legalBtn = document.getElementById('legalLinkBtn');
         const legalFooterBtn = document.getElementById('legalFooterBtn');
         const legalModal = document.getElementById('legalModal');
         const closeLegal = document.getElementById('closeLegalModal');
         const closeLegalBtn = document.getElementById('closeLegalBtn');
         
-        // Open Privacy Modal
-        const openPrivacy = () => {
-            privacyModal.classList.add('show');
-            trackEvent('modal_opened', { modal: 'privacy_policy' });
-        };
-        
-        if (privacyBtn) privacyBtn.addEventListener('click', openPrivacy);
-        if (privacyFooterBtn) privacyFooterBtn.addEventListener('click', openPrivacy);
-        
-        // Close Privacy Modal
-        const closePrivacyModal = () => {
-            privacyModal.classList.remove('show');
-        };
-        if (closePrivacy) closePrivacy.addEventListener('click', closePrivacyModal);
-        if (closePrivacyBtn) closePrivacyBtn.addEventListener('click', closePrivacyModal);
-        
-        // Open Legal Modal
-        const openLegal = () => {
-            legalModal.classList.add('show');
-            trackEvent('modal_opened', { modal: 'legal_safety' });
-        };
-        if (legalBtn) legalBtn.addEventListener('click', openLegal);
+        const openLegal = () => { if (legalModal) legalModal.classList.add('show'); };
         if (legalFooterBtn) legalFooterBtn.addEventListener('click', openLegal);
+        if (closeLegal) closeLegal.addEventListener('click', () => legalModal.classList.remove('show'));
+        if (closeLegalBtn) closeLegalBtn.addEventListener('click', () => legalModal.classList.remove('show'));
         
-        // Close Legal Modal
-        const closeLegalModal = () => {
-            legalModal.classList.remove('show');
-        };
-        if (closeLegal) closeLegal.addEventListener('click', closeLegalModal);
-        if (closeLegalBtn) closeLegalBtn.addEventListener('click', closeLegalModal);
-        
-        // Close modals on outside click
         window.addEventListener('click', (e) => {
+            if (e.target === holidaysModal) holidaysModal.classList.remove('show');
             if (e.target === privacyModal) privacyModal.classList.remove('show');
             if (e.target === legalModal) legalModal.classList.remove('show');
         });
     }
 
-    // ========== COOKIE CONSENT SYSTEM ==========
-    function initCookieConsent() {
-        const cookieBanner = document.getElementById('cookieConsent');
-        const acceptBtn = document.getElementById('cookieAccept');
-        const denyBtn = document.getElementById('cookieDeny');
-        const settingsBtn = document.getElementById('cookieSettings');
-        const modal = document.getElementById('cookieModal');
-        const closeModal = document.getElementById('closeModal');
-        const savePreferences = document.getElementById('savePreferences');
-        const cookieSettingsFooter = document.getElementById('cookieSettingsFooter');
+    function buildHolidaysModalContent() {
+        const bangladeshContainer = document.getElementById('bangladeshHolidays');
+        const internationalContainer = document.getElementById('internationalHolidays');
+        const islamicContainer = document.getElementById('islamicHolidays');
+        const currentHighlight = document.getElementById('currentHolidayHighlight');
         
-        const consentGiven = localStorage.getItem('cookie_consent_given');
-        const savedPreferences = localStorage.getItem('cookie_preferences');
+        const today = new Date();
+        const todayStr = today.toISOString().split('T')[0];
+        const currentHoliday = checkTodayHoliday();
+        const nextHoliday = getNextUpcomingHoliday();
         
-        if (savedPreferences) {
-            cookiePreferences = JSON.parse(savedPreferences);
+        if (currentHoliday && currentHighlight) {
+            let holidayTypeLabel = "";
+            if (currentHoliday.type === "govt") holidayTypeLabel = "Bangladesh Government Holiday";
+            else if (currentHoliday.type === "international") holidayTypeLabel = "International Holiday";
+            else if (currentHoliday.type === "islamic") holidayTypeLabel = "Islamic Holiday";
+            
+            currentHighlight.innerHTML = `
+                <i class="fas ${currentHoliday.icon}"></i>
+                <h3>${currentHoliday.name}</h3>
+                <p>Today is ${holidayTypeLabel}</p>
+                <p style="margin-top: 8px;">Enjoy your day!</p>
+            `;
+        } else if (currentHighlight) {
+            if (nextHoliday) {
+                const daysLeft = getDaysRemaining(nextHoliday.date);
+                currentHighlight.innerHTML = `
+                    <i class="fas fa-calendar-day"></i>
+                    <h3>Upcoming Holiday</h3>
+                    <p><strong>${nextHoliday.name}</strong> on ${formatShortDate(nextHoliday.date)}</p>
+                    <p style="margin-top: 8px;">${daysLeft} days to go!</p>
+                `;
+            } else {
+                currentHighlight.innerHTML = `
+                    <i class="fas fa-calendar-check"></i>
+                    <h3>No More Holidays</h3>
+                    <p>All holidays for ${CURRENT_YEAR} have passed.</p>
+                `;
+            }
         }
         
-        if (!consentGiven) {
-            setTimeout(() => {
-                cookieBanner.classList.add('show');
-                trackEvent('cookie_banner_shown', {});
-            }, 1000);
-        } else {
-            applyCookiePreferences();
-        }
-        
-        // Accept all cookies
-        if (acceptBtn) {
-            acceptBtn.addEventListener('click', () => {
-                cookiePreferences = {
-                    functional: true,
-                    analytics: true,
-                    advertising: true
-                };
-                saveCookiePreferences('all');
-                cookieBanner.classList.remove('show');
-                showToast('Cookies accepted! Thank you for your preference.');
-                applyCookiePreferences();
-                trackEvent('cookie_consent', { action: 'accept_all' });
+        const buildList = (container, holidays, typeLabel, typeClass) => {
+            if (!container) return;
+            container.innerHTML = '';
+            holidays.forEach(holiday => {
+                const isToday = holiday.date === todayStr;
+                const item = document.createElement('div');
+                item.className = 'holiday-item';
+                if (isToday) item.style.background = 'rgba(0,196,180,0.1)';
+                item.innerHTML = `
+                    <div class="holiday-name">
+                        <i class="fas ${holiday.icon}"></i>
+                        <span>${holiday.name} ${isToday ? '<span style="color:#00C4B4;">(Today!)</span>' : ''}</span>
+                    </div>
+                    <div class="holiday-date">${formatShortDate(holiday.date)}</div>
+                    <span class="holiday-type ${typeClass}">${typeLabel}</span>
+                `;
+                container.appendChild(item);
             });
-        }
-        
-        // Deny all non-essential cookies
-        if (denyBtn) {
-            denyBtn.addEventListener('click', () => {
-                cookiePreferences = {
-                    functional: false,
-                    analytics: false,
-                    advertising: false
-                };
-                saveCookiePreferences('deny');
-                cookieBanner.classList.remove('show');
-                showToast('You have denied non-essential cookies.');
-                applyCookiePreferences();
-                trackEvent('cookie_consent', { action: 'deny_all' });
-            });
-        }
-        
-        // Open settings modal
-        const openSettings = () => {
-            document.getElementById('functionalCookies').checked = cookiePreferences.functional;
-            document.getElementById('analyticsCookies').checked = cookiePreferences.analytics;
-            document.getElementById('advertisingCookies').checked = cookiePreferences.advertising;
-            modal.classList.add('show');
-            trackEvent('cookie_settings_opened', {});
         };
         
-        if (settingsBtn) settingsBtn.addEventListener('click', openSettings);
-        if (cookieSettingsFooter) cookieSettingsFooter.addEventListener('click', openSettings);
-        
-        // Close modal
-        if (closeModal) {
-            closeModal.addEventListener('click', () => {
-                modal.classList.remove('show');
-            });
-        }
-        
-        window.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.classList.remove('show');
-            }
-        });
-        
-        // Save preferences
-        if (savePreferences) {
-            savePreferences.addEventListener('click', () => {
-                cookiePreferences = {
-                    functional: document.getElementById('functionalCookies').checked,
-                    analytics: document.getElementById('analyticsCookies').checked,
-                    advertising: document.getElementById('advertisingCookies').checked
-                };
-                saveCookiePreferences('custom');
-                modal.classList.remove('show');
-                cookieBanner.classList.remove('show');
-                showToast('Your cookie preferences have been saved.');
-                applyCookiePreferences();
-                trackEvent('cookie_consent', { action: 'save_preferences', preferences: cookiePreferences });
-            });
-        }
+        buildList(bangladeshContainer, HOLIDAYS.bangladesh, "Government", "govt");
+        buildList(internationalContainer, HOLIDAYS.international, "International", "international");
+        buildList(islamicContainer, HOLIDAYS.islamic, "Islamic", "islamic");
     }
-    
-    function saveCookiePreferences(type) {
-        localStorage.setItem('cookie_consent_given', 'true');
-        localStorage.setItem('cookie_consent_type', type);
-        localStorage.setItem('cookie_preferences', JSON.stringify(cookiePreferences));
-        
-        console.log('Cookie preferences saved:', {
-            type: type,
-            preferences: cookiePreferences,
-            timestamp: new Date().toISOString()
-        });
-    }
-    
-    function applyCookiePreferences() {
-        // Apply analytics
-        analyticsEnabled = cookiePreferences.analytics === true;
-        if (analyticsEnabled) {
-            console.log('Analytics tracking enabled');
-            trackEvent('analytics_enabled', { timestamp: new Date().toISOString() });
-        } else {
-            console.log('Analytics tracking disabled');
-        }
-        
-        // Apply advertising
-        if (cookiePreferences.advertising) {
-            console.log('Advertising cookies enabled');
-            initializeAdsterra();
-        } else {
-            console.log('Advertising cookies disabled');
-        }
-        
-        // Apply functional
-        if (cookiePreferences.functional) {
-            console.log('Functional cookies enabled');
-            restoreUserPreferences();
-        }
-    }
-    
-    function initializeAdsterra() {
-        // Adsterra initialization - Add your Adsterra code here
-        console.log('Adsterra ads initialized');
-        // Example: Load Adsterra script dynamically
-        // const script = document.createElement('script');
-        // script.src = '//YOUR_ADSTERRA_SCRIPT_URL.js';
-        // document.head.appendChild(script);
-    }
-    
-    function restoreUserPreferences() {
-        const lastServer = localStorage.getItem('last_selected_server');
-        if (lastServer && !isNaN(parseInt(lastServer))) {
-            switchServer(parseInt(lastServer));
-        }
-    }
-    
-    function saveLastServer(serverId) {
-        if (localStorage.getItem('cookie_consent_given') === 'true') {
-            const prefs = JSON.parse(localStorage.getItem('cookie_preferences') || '{}');
-            if (prefs.functional !== false) {
-                localStorage.setItem('last_selected_server', serverId);
-            }
-        }
-    }
-    
-    // Override switchServer to save preference
-    const originalSwitchServer = switchServer;
-    window.switchServer = function(serverId) {
-        originalSwitchServer(serverId);
-        saveLastServer(serverId);
-    };
-    
-    // Page view tracking
-    function trackPageView() {
-        trackEvent('page_view', {
-            page: window.location.pathname,
-            title: document.title,
-            timestamp: new Date().toISOString()
-        });
-    }
-    
-    // Initialize everything
+
+    // ========== INITIALIZATION ==========
     function init() {
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+        
+        displayCurrentHoliday();
+        
         buildChannels();
         initHeroButtons();
         initFullscreen();
         initBackToTop();
         initViewerCounter();
-        initSocialShare();
+        initFloatingSocialIcons();
         initNavigation();
         initCookieConsent();
+        initCookieSettingsFooter();
         initModals();
+        initFloatingDateTimeBar();
         
         if (playerFrame && SERVERS[0]) {
             playerFrame.src = SERVERS[0].url;
             currentChannelNameSpan.innerText = SERVERS[0].name;
         }
         
-        trackPageView();
-        showToast('Welcome to CHALUNG! Tap any channel to play');
+        showToast('Welcome to CHALUNG!', 'success');
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
-    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
 })();

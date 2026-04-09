@@ -5,25 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes, maximum-scale=1.0">
     <title>CHALUNG | Premium Live TV Streaming</title>
     <meta name="description" content="CHALUNG - Experience crystal clear HD live TV streaming. Watch your favorite channels 24/7 with zero buffering. Free and premium quality streams.">
-    <meta name="keywords" content="live tv, hd streaming, free tv, bangladesh tv, mirraby, ash tv, online tv">
+    <meta name="keywords" content="live tv, hd streaming, free tv, bangladesh tv, mirraby, ash tv, online tv, chalung">
     <meta name="author" content="CHALUNG">
     <meta name="theme-color" content="#00C4B4">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
-    <!-- Adsterra Ad Code - Ready to add your publisher ID -->
-    <!-- Replace 'YOUR_ADSTERRA_PUBLISHER_ID' with your actual Adsterra ID -->
-    <script>
-        // Adsterra initialization - Uncomment and add your ID when ready
-        // (function() {
-        //     var s = document.createElement('script');
-        //     s.type = 'text/javascript';
-        //     s.async = true;
-        //     s.src = '//www.googletagservices.com/tag/js/gpt.js';
-        //     // Add your Adsterra script here
-        // })();
-    </script>
     
     <!-- Profitable CPM Network Ads -->
     <script src="https://pl29095811.profitablecpmratenetwork.com/cc/d4/c3/ccd4c362f4552fba4c2d4221a0c17e8d.js"></script>
@@ -31,6 +18,30 @@
 </head>
 <body>
 <div class="bg-gradient"></div>
+
+<!-- Floating Social Icons - Left Side -->
+<div class="floating-social-icons">
+    <div class="social-icon-item" id="floatingFb">
+        <i class="fab fa-facebook-f"></i>
+        <span class="social-tooltip">Facebook</span>
+    </div>
+    <div class="social-icon-item" id="floatingTw">
+        <i class="fab fa-twitter"></i>
+        <span class="social-tooltip">Twitter</span>
+    </div>
+    <div class="social-icon-item" id="floatingWa">
+        <i class="fab fa-whatsapp"></i>
+        <span class="social-tooltip">WhatsApp</span>
+    </div>
+    <div class="social-icon-item" id="floatingLink">
+        <i class="fas fa-link"></i>
+        <span class="social-tooltip">Copy Link</span>
+    </div>
+    <div class="social-icon-item" id="floatingShare">
+        <i class="fas fa-share-alt"></i>
+        <span class="social-tooltip">Share</span>
+    </div>
+</div>
 
 <div class="landing-container">
     <!-- Navigation -->
@@ -48,8 +59,7 @@
             <a href="#" data-nav="home">Home</a>
             <a href="#" data-nav="channels">Channels</a>
             <a href="#" data-nav="features">Features</a>
-            <a href="#" id="privacyLinkBtn" data-nav="privacy">Privacy</a>
-            <a href="#" id="legalLinkBtn" data-nav="legal">Legal</a>
+            <a href="#" data-nav="holidays" id="holidaysLinkBtn">Holidays</a>
             <div class="live-indicator">
                 <span class="live-dot"></span>
                 <span>24/7 LIVE</span>
@@ -57,19 +67,57 @@
         </div>
     </nav>
 
-    <!-- Top Ad Banner (Adsterra ready) -->
-    <div class="ad-top-container">
-        <span class="ad-label">ADVERTISEMENT</span>
-        <div class="ad-banner" id="topAdContainer">
-            <!-- Adsterra ad will be placed here -->
-            <div class="adsterra-placeholder" data-adsterra-slot="top"></div>
+    <!-- Current Date & Time Bar -->
+    <div class="datetime-bar" id="datetimeBar">
+        <div class="datetime-container">
+            <div class="datetime-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span id="currentDate">Loading...</span>
+            </div>
+            <div class="datetime-divider"></div>
+            <div class="datetime-item">
+                <i class="fas fa-clock"></i>
+                <span id="currentTime">Loading...</span>
+            </div>
+            <div class="datetime-divider"></div>
+            <div class="datetime-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span id="timezone">Asia/Dhaka</span>
+            </div>
+            <div class="datetime-divider"></div>
+            <div class="datetime-item next-holiday-info">
+                <i class="fas fa-calendar-day"></i>
+                <span id="nextHolidayInfo">Loading...</span>
+            </div>
         </div>
     </div>
 
-    <!-- Hero Section (Player Area) -->
+    <!-- Current Holiday Display -->
+    <div id="currentHolidayDisplay" class="current-holiday-card" style="display: none;">
+        <div class="current-holiday-inner">
+            <div class="holiday-icon">
+                <i class="fas fa-gift"></i>
+            </div>
+            <div class="holiday-info">
+                <div class="holiday-label">TODAY'S HOLIDAY</div>
+                <div class="holiday-name" id="currentHolidayName">Loading...</div>
+                <div class="holiday-type-badge" id="currentHolidayType">Government Holiday</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Ad Banner -->
+    <div class="ad-top-container">
+        <span class="ad-label">ADVERTISEMENT</span>
+        <div class="ad-banner" id="topAdContainer">
+            <div class="adsterra-placeholder">Ad Space</div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
     <div class="hero-section" id="playerSection">
         <div class="hero-content">
-            <span class="hero-badge"><i class="fas fa-play-circle"></i> LIVE STREAMING</span>
+            <span class="hero-badge">LIVE STREAMING</span>
             <h2>Experience Crystal Clear HD Live TV</h2>
             <p>Watch your favorite channels in stunning HD quality. Zero buffering, 24/7 uptime, and completely free.</p>
             <div class="hero-stats">
@@ -119,11 +167,11 @@
         </div>
     </div>
 
-    <!-- Middle Ad Banner (Adsterra ready) -->
+    <!-- Middle Ad Banner -->
     <div class="ad-middle-container">
         <span class="ad-label">SPONSORED CONTENT</span>
         <div class="ad-banner" id="middleAdContainer">
-            <div class="adsterra-placeholder" data-adsterra-slot="middle"></div>
+            <div class="adsterra-placeholder">Ad Space</div>
         </div>
     </div>
 
@@ -131,7 +179,7 @@
     <div class="channels-section" id="channelsSection">
         <div class="section-header">
             <h3><i class="fas fa-satellite-dish"></i> Available Channels</h3>
-            <div class="scroll-hint"><i class="fas fa-arrows-alt-h"></i> Tap any channel to play</div>
+            <div class="scroll-hint"><i class="fas fa-arrows-alt-h"></i> Swipe to scroll</div>
         </div>
         <div class="channel-scroll">
             <div class="channels-grid" id="channelsGrid"></div>
@@ -164,11 +212,11 @@
         </div>
     </div>
 
-    <!-- Bottom Ad Banner (Adsterra ready) -->
+    <!-- Bottom Ad Banner -->
     <div class="ad-bottom-container">
         <span class="ad-label">PROMOTION</span>
         <div class="ad-banner" id="bottomAdContainer">
-            <div class="adsterra-placeholder" data-adsterra-slot="bottom"></div>
+            <div class="adsterra-placeholder">Ad Space</div>
         </div>
     </div>
 
@@ -180,12 +228,13 @@
         <div class="footer-links">
             <a href="#" id="privacyFooterBtn">Privacy Policy</a>
             <a href="#" id="legalFooterBtn">Terms of Service</a>
+            <a href="#" id="holidaysFooterBtn">Holiday Calendar</a>
             <a href="#" id="cookieSettingsFooter">Cookie Settings</a>
         </div>
         <div class="social-links">
-            <a href="#" id="shareFb"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" id="shareTw"><i class="fab fa-twitter"></i></a>
-            <a href="#" id="shareWa"><i class="fab fa-whatsapp"></i></a>
+            <a href="#" id="shareFbFooter"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" id="shareTwFooter"><i class="fab fa-twitter"></i></a>
+            <a href="#" id="shareWaFooter"><i class="fab fa-whatsapp"></i></a>
         </div>
     </div>
 </div>
@@ -195,7 +244,82 @@
     <i class="fas fa-arrow-up"></i>
 </button>
 
-<!-- Cookie Consent Banner -->
+<!-- Holidays Modal -->
+<div id="holidaysModal" class="cookie-modal">
+    <div class="cookie-modal-content policy-modal holidays-modal">
+        <div class="cookie-modal-header">
+            <h3>Bangladesh & International Holidays 2026</h3>
+            <button class="cookie-modal-close" id="closeHolidaysModal">&times;</button>
+        </div>
+        <div class="cookie-modal-body policy-body holidays-body">
+            <div class="current-holiday-highlight" id="currentHolidayHighlight"></div>
+            
+            <h4>Bangladesh Government Holidays 2026</h4>
+            <div class="holiday-list" id="bangladeshHolidays"></div>
+            
+            <h4>International Holidays 2026</h4>
+            <div class="holiday-list" id="internationalHolidays"></div>
+            
+            <h4>Islamic Holidays 2026</h4>
+            <div class="holiday-list" id="islamicHolidays"></div>
+            
+            <p class="holiday-note">Islamic holidays are subject to moon sighting and may vary by 1-2 days.</p>
+        </div>
+        <div class="cookie-modal-footer">
+            <button class="cookie-modal-save" id="closeHolidaysBtn">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- Privacy Policy Modal -->
+<div id="privacyModal" class="cookie-modal">
+    <div class="cookie-modal-content policy-modal">
+        <div class="cookie-modal-header">
+            <h3>Privacy Policy</h3>
+            <button class="cookie-modal-close" id="closePrivacyModal">&times;</button>
+        </div>
+        <div class="cookie-modal-body policy-body">
+            <h4>Information We Collect</h4>
+            <p>We collect information you provide directly to us.</p>
+            <h4>Cookies and Tracking</h4>
+            <p>We use cookies to track activity on our service.</p>
+            <h4>Data Security</h4>
+            <p>We implement security measures to protect your information.</p>
+            <h4>Contact Us</h4>
+            <p>Email: privacy@chalung.com</p>
+            <p class="policy-date"><strong>Last Updated:</strong> January 1, 2026</p>
+        </div>
+        <div class="cookie-modal-footer">
+            <button class="cookie-modal-save" id="closePrivacyBtn">I Understand</button>
+        </div>
+    </div>
+</div>
+
+<!-- Legal Modal -->
+<div id="legalModal" class="cookie-modal">
+    <div class="cookie-modal-content policy-modal">
+        <div class="cookie-modal-header">
+            <h3>Legal & Safety Information</h3>
+            <button class="cookie-modal-close" id="closeLegalModal">&times;</button>
+        </div>
+        <div class="cookie-modal-body policy-body">
+            <h4>Terms of Service</h4>
+            <p>By using CHALUNG, you agree to these Terms of Service.</p>
+            <h4>Copyright</h4>
+            <p>All content is owned by CHALUNG or licensed from third parties.</p>
+            <h4>DMCA Compliance</h4>
+            <p>Contact: dmca@chalung.com</p>
+            <h4>Governing Law</h4>
+            <p>These terms are governed by the laws of Bangladesh.</p>
+            <p class="policy-date"><strong>Last Updated:</strong> January 1, 2026</p>
+        </div>
+        <div class="cookie-modal-footer">
+            <button class="cookie-modal-save" id="closeLegalBtn">I Agree</button>
+        </div>
+    </div>
+</div>
+
+<!-- Cookie Consent Banner - UPDATED -->
 <div id="cookieConsent" class="cookie-consent">
     <div class="cookie-content">
         <div class="cookie-icon">
@@ -203,36 +327,37 @@
         </div>
         <div class="cookie-text">
             <h4>🍪 We Value Your Privacy</h4>
-            <p>We use cookies and similar technologies to enhance your browsing experience, serve personalized ads, and analyze our traffic. By clicking "Accept All", you consent to our use of cookies.</p>
+            <p>We use essential cookies for website functionality. Optional cookies help us improve your experience. Choose your preference below.</p>
         </div>
         <div class="cookie-buttons">
-            <button class="cookie-btn cookie-settings" id="cookieSettings">
-                <i class="fas fa-sliders-h"></i> Settings
+            <button class="cookie-btn cookie-settings" id="cookieSettingsBtn">
+                <i class="fas fa-sliders-h"></i> Customize
             </button>
-            <button class="cookie-btn cookie-deny" id="cookieDeny">
-                <i class="fas fa-times"></i> Deny
+            <button class="cookie-btn cookie-deny" id="cookieDenyBtn">
+                <i class="fas fa-times"></i> Deny Optional
             </button>
-            <button class="cookie-btn cookie-accept" id="cookieAccept">
+            <button class="cookie-btn cookie-accept" id="cookieAcceptBtn">
                 <i class="fas fa-check"></i> Accept All
             </button>
         </div>
     </div>
 </div>
 
-<!-- Cookie Settings Modal -->
-<div id="cookieModal" class="cookie-modal">
+<!-- Cookie Settings Modal - UPDATED -->
+<div id="cookieSettingsModal" class="cookie-modal">
     <div class="cookie-modal-content">
         <div class="cookie-modal-header">
             <h3><i class="fas fa-cookie-bite"></i> Cookie Preferences</h3>
-            <button class="cookie-modal-close" id="closeModal">&times;</button>
+            <button class="cookie-modal-close" id="closeSettingsModal">&times;</button>
         </div>
         <div class="cookie-modal-body">
-            <p>Customize your cookie preferences below. Essential cookies are necessary for the website to function properly.</p>
+            <p>Customize your cookie preferences below. Essential cookies are necessary for the website to function properly and cannot be disabled.</p>
             
-            <div class="cookie-option">
+            <div class="cookie-option essential">
                 <div class="cookie-option-info">
-                    <h4>Essential Cookies</h4>
-                    <p>Required for basic website functionality. These cannot be disabled.</p>
+                    <h4>✅ Essential Cookies</h4>
+                    <p>Required for basic website functionality. These cookies enable core features like security, network management, and accessibility.</p>
+                    <p class="cookie-status">Always Active</p>
                 </div>
                 <label class="cookie-toggle disabled">
                     <input type="checkbox" checked disabled>
@@ -242,116 +367,39 @@
             
             <div class="cookie-option">
                 <div class="cookie-option-info">
-                    <h4>Functional Cookies</h4>
-                    <p>Remember your preferences and enhance your experience.</p>
+                    <h4>📝 Functional Cookies</h4>
+                    <p>Remember your preferences, such as language, region, and previously selected server. Enhances your browsing experience.</p>
                 </div>
                 <label class="cookie-toggle">
-                    <input type="checkbox" id="functionalCookies" checked>
+                    <input type="checkbox" id="functionalCookiesToggle" checked>
                     <span class="toggle-slider"></span>
                 </label>
             </div>
             
             <div class="cookie-option">
                 <div class="cookie-option-info">
-                    <h4>Analytics Cookies</h4>
-                    <p>Help us understand how visitors interact with our website.</p>
+                    <h4>📊 Analytics Cookies</h4>
+                    <p>Help us understand how visitors interact with our website by collecting anonymous information. This helps us improve our service.</p>
                 </div>
                 <label class="cookie-toggle">
-                    <input type="checkbox" id="analyticsCookies" checked>
+                    <input type="checkbox" id="analyticsCookiesToggle" checked>
                     <span class="toggle-slider"></span>
                 </label>
             </div>
             
             <div class="cookie-option">
                 <div class="cookie-option-info">
-                    <h4>Advertising Cookies</h4>
-                    <p>Used to deliver personalized ads based on your interests.</p>
+                    <h4>🎯 Advertising Cookies</h4>
+                    <p>Used to deliver personalized advertisements based on your interests. These cookies help us keep our service free.</p>
                 </div>
                 <label class="cookie-toggle">
-                    <input type="checkbox" id="advertisingCookies" checked>
+                    <input type="checkbox" id="advertisingCookiesToggle" checked>
                     <span class="toggle-slider"></span>
                 </label>
             </div>
         </div>
         <div class="cookie-modal-footer">
-            <button class="cookie-modal-save" id="savePreferences">Save Preferences</button>
-        </div>
-    </div>
-</div>
-
-<!-- Privacy Policy Modal -->
-<div id="privacyModal" class="cookie-modal">
-    <div class="cookie-modal-content policy-modal">
-        <div class="cookie-modal-header">
-            <h3><i class="fas fa-shield-alt"></i> Privacy Policy</h3>
-            <button class="cookie-modal-close" id="closePrivacyModal">&times;</button>
-        </div>
-        <div class="cookie-modal-body policy-body">
-            <h4>Information We Collect</h4>
-            <p>We collect information you provide directly to us, such as when you create an account, subscribe to our newsletter, or contact us for support.</p>
-            
-            <h4>Cookies and Tracking Technologies</h4>
-            <p>We use cookies and similar tracking technologies to track activity on our service and hold certain information. You can manage your cookie preferences through our cookie settings.</p>
-            
-            <h4>How We Use Your Information</h4>
-            <p>We use the information we collect to provide, maintain, and improve our services, to communicate with you, and to comply with legal obligations.</p>
-            
-            <h4>Data Security</h4>
-            <p>We implement appropriate technical and organizational measures to protect the security of your personal information.</p>
-            
-            <h4>Third-Party Services</h4>
-            <p>We may use third-party services such as analytics providers and advertising networks that collect information about your use of our services.</p>
-            
-            <h4>Your Rights</h4>
-            <p>You have the right to access, correct, or delete your personal information. You may also object to or restrict certain processing of your information.</p>
-            
-            <h4>Contact Us</h4>
-            <p>If you have questions about this Privacy Policy, please contact us at privacy@CHALUNG.com</p>
-            
-            <p class="policy-date"><strong>Last Updated:</strong> January 1, 2024</p>
-        </div>
-        <div class="cookie-modal-footer">
-            <button class="cookie-modal-save" id="closePrivacyBtn">I Understand</button>
-        </div>
-    </div>
-</div>
-
-<!-- Legal & Safety Modal -->
-<div id="legalModal" class="cookie-modal">
-    <div class="cookie-modal-content policy-modal">
-        <div class="cookie-modal-header">
-            <h3><i class="fas fa-gavel"></i> Legal & Safety Information</h3>
-            <button class="cookie-modal-close" id="closeLegalModal">&times;</button>
-        </div>
-        <div class="cookie-modal-body policy-body">
-            <h4>Terms of Service</h4>
-            <p>By accessing and using CHALUNG, you agree to be bound by these Terms of Service. If you do not agree, please do not use our service.</p>
-            
-            <h4>Acceptable Use Policy</h4>
-            <p>You agree not to use the service for any unlawful purpose or in any way that could damage, disable, overburden, or impair our servers or networks.</p>
-            
-            <h4>Copyright and Intellectual Property</h4>
-            <p>All content on CHALUNG is either owned by us or licensed from third parties. You may not reproduce, distribute, or create derivative works without permission.</p>
-            
-            <h4>Disclaimer of Warranties</h4>
-            <p>The service is provided "as is" without warranties of any kind, either express or implied. We do not guarantee that the service will be uninterrupted or error-free.</p>
-            
-            <h4>Limitation of Liability</h4>
-            <p>To the fullest extent permitted by law, CHALUNG shall not be liable for any indirect, incidental, special, consequential, or punitive damages.</p>
-            
-            <h4>DMCA Compliance</h4>
-            <p>We respect intellectual property rights and respond to notices of alleged infringement. For DMCA notices, contact: dmca@CHALUNG.com</p>
-            
-            <h4>Governing Law</h4>
-            <p>These terms shall be governed by and construed in accordance with the laws of the jurisdiction in which we operate.</p>
-            
-            <h4>Safety Guidelines</h4>
-            <p>We are committed to providing a safe environment for our users. Do not share personal information with other users. Report any suspicious activity to safety@CHALUNG.com</p>
-            
-            <p class="policy-date"><strong>Last Updated:</strong> January 1, 2024</p>
-        </div>
-        <div class="cookie-modal-footer">
-            <button class="cookie-modal-save" id="closeLegalBtn">I Agree</button>
+            <button class="cookie-modal-save" id="saveCookiePreferencesBtn">Save My Preferences</button>
         </div>
     </div>
 </div>
