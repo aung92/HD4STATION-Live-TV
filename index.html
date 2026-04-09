@@ -13,31 +13,28 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
     
-    <!-- Ad Script with Error Handling -->
+    <!-- All Four Ad Scripts with Error Handling -->
+    <!-- Ad Script 1 -->
+    <script src="https://pl29095811.profitablecpmratenetwork.com/cc/d4/c3/ccd4c362f4552fba4c2d4221a0c17e8d.js"></script>
+    
+    <!-- Ad Script 2 -->
+    <script src="https://pl29095813.profitablecpmratenetwork.com/72/87/67/72876747c990e7aaa7219db5e118d523.js"></script>
+    
+    <!-- Ad Script 3 (New) -->
+    <script async="async" data-cfasync="false" src="https://pl29095812.profitablecpmratenetwork.com/29b16b23a42fbaf6138dad3e0889e02e/invoke.js"></script>
+    
+    <!-- Ad Script 4 (New Container) -->
     <script>
         (function() {
-            function loadAdScript(src) {
-                const script = document.createElement('script');
-                script.src = src;
-                script.async = true;
-                script.onerror = function() {
-                    console.log('Ad script failed to load, using fallback');
-                    showFallbackAds();
-                };
-                document.head.appendChild(script);
-            }
-            
             function showFallbackAds() {
                 const containers = ['container-29b16b23a42fbaf6138dad3e0889e02e', 'container-29b16b23a42fbaf6138dad3e0889e02e-middle', 'container-29b16b23a42fbaf6138dad3e0889e02e-bottom'];
                 containers.forEach(id => {
                     const el = document.getElementById(id);
-                    if (el && (!el.children.length || el.children[0]?.className === 'loading-ad')) {
+                    if (el && (!el.children.length || el.children.length === 0)) {
                         el.innerHTML = '<div class="fallback-ad"><i class="fas fa-ad"></i> Advertisement Space<br><small>Support CHALUNG</small></div>';
                     }
                 });
             }
-            
-            loadAdScript('https://pl29095812.profitablecpmratenetwork.com/29b16b23a42fbaf6138dad3e0889e02e/invoke.js');
             
             setTimeout(function() {
                 const containers = ['container-29b16b23a42fbaf6138dad3e0889e02e', 'container-29b16b23a42fbaf6138dad3e0889e02e-middle', 'container-29b16b23a42fbaf6138dad3e0889e02e-bottom'];
@@ -58,160 +55,24 @@
 
 <!-- Floating Social Icons -->
 <div class="floating-social-icons">
-    <div class="social-icon-item" id="floatingFb">
-        <i class="fab fa-facebook-f"></i>
-        <span class="social-tooltip">Facebook</span>
-    </div>
-    <div class="social-icon-item" id="floatingTw">
-        <i class="fab fa-twitter"></i>
-        <span class="social-tooltip">Twitter</span>
-    </div>
-    <div class="social-icon-item" id="floatingWa">
-        <i class="fab fa-whatsapp"></i>
-        <span class="social-tooltip">WhatsApp</span>
-    </div>
-    <div class="social-icon-item" id="floatingLink">
-        <i class="fas fa-link"></i>
-        <span class="social-tooltip">Copy Link</span>
-    </div>
-    <div class="social-icon-item" id="floatingShare">
-        <i class="fas fa-share-alt"></i>
-        <span class="social-tooltip">Share</span>
-    </div>
+    <div class="social-icon-item" id="floatingFb"><i class="fab fa-facebook-f"></i><span class="social-tooltip">Facebook</span></div>
+    <div class="social-icon-item" id="floatingTw"><i class="fab fa-twitter"></i><span class="social-tooltip">Twitter</span></div>
+    <div class="social-icon-item" id="floatingWa"><i class="fab fa-whatsapp"></i><span class="social-tooltip">WhatsApp</span></div>
+    <div class="social-icon-item" id="floatingLink"><i class="fas fa-link"></i><span class="social-tooltip">Copy Link</span></div>
+    <div class="social-icon-item" id="floatingShare"><i class="fas fa-share-alt"></i><span class="social-tooltip">Share</span></div>
 </div>
 
 <!-- Floating Hire Me & Donate -->
 <div class="floating-actions">
-    <div class="action-item hire-btn" id="hireBtn">
-        <div class="action-icon">
-            <i class="fas fa-user-tie"></i>
-        </div>
-        <div class="action-text">
-            <span class="action-title">Hire Me</span>
-            <span class="action-subtitle">Web Developer</span>
-        </div>
-        <div class="action-arrow">
-            <i class="fas fa-arrow-right"></i>
-        </div>
-    </div>
-    <div class="action-item donate-btn" id="donateBtn">
-        <div class="action-icon">
-            <i class="fas fa-hand-holding-heart"></i>
-        </div>
-        <div class="action-text">
-            <span class="action-title">Support Us</span>
-            <span class="action-subtitle">Donate Taka</span>
-        </div>
-        <div class="action-arrow">
-            <i class="fas fa-arrow-right"></i>
-        </div>
-    </div>
+    <div class="action-item hire-btn" id="hireBtn"><div class="action-icon"><i class="fas fa-user-tie"></i></div><div class="action-text"><span class="action-title">Hire Me</span><span class="action-subtitle">Web Developer</span></div><div class="action-arrow"><i class="fas fa-arrow-right"></i></div></div>
+    <div class="action-item donate-btn" id="donateBtn"><div class="action-icon"><i class="fas fa-hand-holding-heart"></i></div><div class="action-text"><span class="action-title">Support Us</span><span class="action-subtitle">Donate Taka</span></div><div class="action-arrow"><i class="fas fa-arrow-right"></i></div></div>
 </div>
 
 <!-- Hire Me Modal -->
-<div id="hireModal" class="custom-modal">
-    <div class="custom-modal-content">
-        <div class="custom-modal-header">
-            <h3><i class="fas fa-user-tie"></i> Hire Me</h3>
-            <button class="custom-modal-close" id="closeHireModal">&times;</button>
-        </div>
-        <div class="custom-modal-body">
-            <div class="profile-section">
-                <div class="profile-icon"><i class="fas fa-code"></i></div>
-                <h4>Professional Web Developer</h4>
-                <p>Expert in HTML, CSS, JavaScript, React, Node.js, and modern web technologies.</p>
-            </div>
-            <div class="skills-section">
-                <h4><i class="fas fa-cogs"></i> My Skills</h4>
-                <div class="skills-list">
-                    <span class="skill-tag">HTML5/CSS3</span>
-                    <span class="skill-tag">JavaScript/ES6</span>
-                    <span class="skill-tag">React.js</span>
-                    <span class="skill-tag">Node.js</span>
-                    <span class="skill-tag">PHP/Laravel</span>
-                    <span class="skill-tag">Python/Django</span>
-                    <span class="skill-tag">WordPress</span>
-                    <span class="skill-tag">UI/UX Design</span>
-                    <span class="skill-tag">API Development</span>
-                    <span class="skill-tag">Database Design</span>
-                </div>
-            </div>
-            <div class="contact-section">
-                <h4><i class="fas fa-envelope"></i> Contact Me</h4>
-                <div class="contact-buttons">
-                    <a href="mailto:chalung.dev@gmail.com" class="contact-btn email-btn"><i class="fas fa-envelope"></i> chalung.dev@gmail.com</a>
-                    <a href="https://wa.me/8801XXXXXXXXX" class="contact-btn whatsapp-btn"><i class="fab fa-whatsapp"></i> WhatsApp</a>
-                    <a href="https://www.fiverr.com/" class="contact-btn fiverr-btn"><i class="fas fa-star"></i> Fiverr</a>
-                    <a href="https://www.upwork.com/" class="contact-btn upwork-btn"><i class="fab fa-upwork"></i> Upwork</a>
-                </div>
-            </div>
-            <div class="portfolio-section">
-                <h4><i class="fas fa-briefcase"></i> Portfolio</h4>
-                <p>Check out my work and projects at:</p>
-                <div class="portfolio-links">
-                    <a href="#" class="portfolio-link"><i class="fab fa-github"></i> GitHub</a>
-                    <a href="#" class="portfolio-link"><i class="fab fa-linkedin"></i> LinkedIn</a>
-                    <a href="#" class="portfolio-link"><i class="fas fa-globe"></i> Personal Site</a>
-                </div>
-            </div>
-        </div>
-        <div class="custom-modal-footer"><button class="modal-close-btn" id="hireModalCloseBtn">Close</button></div>
-    </div>
-</div>
+<div id="hireModal" class="custom-modal"><div class="custom-modal-content"><div class="custom-modal-header"><h3><i class="fas fa-user-tie"></i> Hire Me</h3><button class="custom-modal-close" id="closeHireModal">&times;</button></div><div class="custom-modal-body"><div class="profile-section"><div class="profile-icon"><i class="fas fa-code"></i></div><h4>Professional Web Developer</h4><p>Expert in HTML, CSS, JavaScript, React, Node.js, and modern web technologies.</p></div><div class="skills-section"><h4><i class="fas fa-cogs"></i> My Skills</h4><div class="skills-list"><span class="skill-tag">HTML5/CSS3</span><span class="skill-tag">JavaScript/ES6</span><span class="skill-tag">React.js</span><span class="skill-tag">Node.js</span><span class="skill-tag">PHP/Laravel</span><span class="skill-tag">Python/Django</span><span class="skill-tag">WordPress</span><span class="skill-tag">UI/UX Design</span><span class="skill-tag">API Development</span><span class="skill-tag">Database Design</span></div></div><div class="contact-section"><h4><i class="fas fa-envelope"></i> Contact Me</h4><div class="contact-buttons"><a href="mailto:chalung.dev@gmail.com" class="contact-btn email-btn"><i class="fas fa-envelope"></i> chalung.dev@gmail.com</a><a href="https://wa.me/8801XXXXXXXXX" class="contact-btn whatsapp-btn"><i class="fab fa-whatsapp"></i> WhatsApp</a><a href="https://www.fiverr.com/" class="contact-btn fiverr-btn"><i class="fas fa-star"></i> Fiverr</a><a href="https://www.upwork.com/" class="contact-btn upwork-btn"><i class="fab fa-upwork"></i> Upwork</a></div></div><div class="portfolio-section"><h4><i class="fas fa-briefcase"></i> Portfolio</h4><p>Check out my work and projects at:</p><div class="portfolio-links"><a href="#" class="portfolio-link"><i class="fab fa-github"></i> GitHub</a><a href="#" class="portfolio-link"><i class="fab fa-linkedin"></i> LinkedIn</a><a href="#" class="portfolio-link"><i class="fas fa-globe"></i> Personal Site</a></div></div></div><div class="custom-modal-footer"><button class="modal-close-btn" id="hireModalCloseBtn">Close</button></div></div></div>
 
 <!-- Donate Modal -->
-<div id="donateModal" class="custom-modal">
-    <div class="custom-modal-content">
-        <div class="custom-modal-header">
-            <h3><i class="fas fa-hand-holding-heart"></i> Support CHALUNG</h3>
-            <button class="custom-modal-close" id="closeDonateModal">&times;</button>
-        </div>
-        <div class="custom-modal-body">
-            <div class="donate-info">
-                <i class="fas fa-heart heart-icon"></i>
-                <h4>Help Us Grow!</h4>
-                <p>Your donation helps us maintain servers, add more channels, and improve your streaming experience.</p>
-            </div>
-            <div class="donation-amounts">
-                <h4><i class="fas fa-taka-sign"></i> Select Amount (BDT)</h4>
-                <div class="amount-buttons">
-                    <button class="amount-btn" data-amount="100">100 ৳</button>
-                    <button class="amount-btn" data-amount="200">200 ৳</button>
-                    <button class="amount-btn" data-amount="500">500 ৳</button>
-                    <button class="amount-btn" data-amount="1000">1,000 ৳</button>
-                    <button class="amount-btn custom-amount-btn" data-amount="custom">Custom</button>
-                </div>
-                <div class="custom-amount-input" id="customAmountInput" style="display:none;"><input type="number" id="customAmount" placeholder="Enter amount in BDT" min="10">
-                </div>
-            </div>
-            <div class="payment-methods">
-                <h4><i class="fas fa-credit-card"></i> Payment Methods</h4>
-                <div class="payment-buttons">
-                    <button class="payment-btn" data-method="bkash"><i class="fab fa-cc-visa"></i> bKash</button>
-                    <button class="payment-btn" data-method="nagad"><i class="fas fa-mobile-alt"></i> Nagad</button>
-                    <button class="payment-btn" data-method="rocket"><i class="fas fa-rocket"></i> Rocket</button>
-                    <button class="payment-btn" data-method="card"><i class="fab fa-cc-mastercard"></i> Card</button>
-                </div>
-            </div>
-            <div class="bank-info" id="bankInfo" style="display:none;">
-                <div class="info-card"><i class="fas fa-university"></i><p><strong>Bank:</strong> Dutch-Bangla Bank Limited</p><p><strong>Account Name:</strong> CHALUNG TV</p><p><strong>Account Number:</strong> 123-456-7890</p><p><strong>Routing Number:</strong> 012345678</p>
-                </div>
-            </div>
-            <div class="mobile-info" id="mobileInfo" style="display:none;">
-                <div class="info-card"><i class="fas fa-mobile-alt"></i><p><strong>Mobile Number:</strong> 01XXXXXXXXX</p><p><strong>Reference:</strong> CHALUNG Donation</p><p class="note">Send money to this number and we'll update your support status</p>
-                </div>
-            </div>
-            <div class="donation-summary" id="donationSummary" style="display:none;">
-                <div class="summary-card"><p><strong>Donation Amount:</strong> <span id="displayAmount">0</span> ৳</p><p><strong>Payment Method:</strong> <span id="displayMethod">-</span>
-                </p><button class="confirm-donate-btn" id="confirmDonateBtn">Confirm Donation</button>
-            </div>
-            </div>
-        </div>
-        <div class="custom-modal-footer">
-            <button class="modal-close-btn" id="donateModalCloseBtn">Close</button>
-        </div>
-    </div>
-</div>
+<div id="donateModal" class="custom-modal"><div class="custom-modal-content"><div class="custom-modal-header"><h3><i class="fas fa-hand-holding-heart"></i> Support CHALUNG</h3><button class="custom-modal-close" id="closeDonateModal">&times;</button></div><div class="custom-modal-body"><div class="donate-info"><i class="fas fa-heart heart-icon"></i><h4>Help Us Grow!</h4><p>Your donation helps us maintain servers, add more channels, and improve your streaming experience.</p></div><div class="donation-amounts"><h4><i class="fas fa-taka-sign"></i> Select Amount (BDT)</h4><div class="amount-buttons"><button class="amount-btn" data-amount="100">100 ৳</button><button class="amount-btn" data-amount="200">200 ৳</button><button class="amount-btn" data-amount="500">500 ৳</button><button class="amount-btn" data-amount="1000">1,000 ৳</button><button class="amount-btn custom-amount-btn" data-amount="custom">Custom</button></div><div class="custom-amount-input" id="customAmountInput" style="display:none;"><input type="number" id="customAmount" placeholder="Enter amount in BDT" min="10"></div></div><div class="payment-methods"><h4><i class="fas fa-credit-card"></i> Payment Methods</h4><div class="payment-buttons"><button class="payment-btn" data-method="bkash"><i class="fab fa-cc-visa"></i> bKash</button><button class="payment-btn" data-method="nagad"><i class="fas fa-mobile-alt"></i> Nagad</button><button class="payment-btn" data-method="rocket"><i class="fas fa-rocket"></i> Rocket</button><button class="payment-btn" data-method="card"><i class="fab fa-cc-mastercard"></i> Card</button></div></div><div class="bank-info" id="bankInfo" style="display:none;"><div class="info-card"><i class="fas fa-university"></i><p><strong>Bank:</strong> Dutch-Bangla Bank Limited</p><p><strong>Account Name:</strong> CHALUNG TV</p><p><strong>Account Number:</strong> 123-456-7890</p><p><strong>Routing Number:</strong> 012345678</p></div></div><div class="mobile-info" id="mobileInfo" style="display:none;"><div class="info-card"><i class="fas fa-mobile-alt"></i><p><strong>Mobile Number:</strong> 01XXXXXXXXX</p><p><strong>Reference:</strong> CHALUNG Donation</p><p class="note">Send money to this number and we'll update your support status</p></div></div><div class="donation-summary" id="donationSummary" style="display:none;"><div class="summary-card"><p><strong>Donation Amount:</strong> <span id="displayAmount">0</span> ৳</p><p><strong>Payment Method:</strong> <span id="displayMethod">-</span></p><button class="confirm-donate-btn" id="confirmDonateBtn">Confirm Donation</button></div></div></div><div class="custom-modal-footer"><button class="modal-close-btn" id="donateModalCloseBtn">Close</button></div></div></div>
 
 <!-- Donation Toast -->
 <div id="donationToast" class="donation-toast" style="display:none;"><div class="toast-content"><i class="fas fa-check-circle"></i><span>Thank you for your support! ❤️</span></div></div>
@@ -225,49 +86,25 @@
             <a href="#" data-nav="features">Features</a>
             <a href="#" data-nav="holidays" id="holidaysLinkBtn">Holidays</a>
             <a href="#" data-nav="reviews" id="reviewsLinkBtn">Reviews</a>
-            <div class="live-indicator">
-                <span class="live-dot"></span><span>24/7 LIVE</span>
-            </div>
+            <div class="live-indicator"><span class="live-dot"></span><span>24/7 LIVE</span></div>
         </div>
     </nav>
 
-    <div id="celebrationBanner" class="celebration-banner" style="display:none;">
-        <div class="celebration-content">
-            <div class="celebration-icon">🎉</div>
-            <div class="celebration-text">
-                <h3 id="celebrationTitle">Happy Holiday!</h3>
-                <p id="celebrationMessage">Wishing you a wonderful celebration</p>
-            </div>
-            <button class="celebration-close" id="closeCelebration">&times;</button>
-        </div>
-    </div>
+    <div id="celebrationBanner" class="celebration-banner" style="display:none;"><div class="celebration-content"><div class="celebration-icon">🎉</div><div class="celebration-text"><h3 id="celebrationTitle">Happy Holiday!</h3><p id="celebrationMessage">Wishing you a wonderful celebration</p></div><button class="celebration-close" id="closeCelebration">&times;</button></div></div>
 
-    <div class="datetime-bar" id="datetimeBar">
-        <div class="datetime-container">
-            <div class="datetime-item"><i class="fas fa-calendar-alt"></i><span id="currentDate">Loading...</span>
-            </div>
-            <div class="datetime-divider"></div>
-            <div class="datetime-item"><i class="fas fa-clock"></i><span id="currentTime">Loading...</span></div>
-            <div class="datetime-divider"></div>
-            <div class="datetime-item"><i class="fas fa-map-marker-alt"></i>
-                <span id="timezone">Asia/Dhaka</span>
-            </div>
-            <div class="datetime-divider"></div>
-            <div class="datetime-item next-holiday-info">
-                <i class="fas fa-calendar-day"></i>
-                <span id="nextHolidayInfo">Loading...</span>
-            </div>
-        </div>
-    </div>
+    <div class="datetime-bar" id="datetimeBar"><div class="datetime-container"><div class="datetime-item"><i class="fas fa-calendar-alt"></i><span id="currentDate">Loading...</span></div><div class="datetime-divider"></div><div class="datetime-item"><i class="fas fa-clock"></i><span id="currentTime">Loading...</span></div><div class="datetime-divider"></div><div class="datetime-item"><i class="fas fa-map-marker-alt"></i><span id="timezone">Asia/Dhaka</span></div><div class="datetime-divider"></div><div class="datetime-item next-holiday-info"><i class="fas fa-calendar-day"></i><span id="nextHolidayInfo">Loading...</span></div></div></div>
 
     <div id="currentHolidayDisplay" class="current-holiday-card" style="display:none;"><div class="current-holiday-inner"><div class="holiday-icon"><i class="fas fa-gift"></i></div><div class="holiday-info"><div class="holiday-label">TODAY'S HOLIDAY</div><div class="holiday-name" id="currentHolidayName">Loading...</div><div class="holiday-type-badge" id="currentHolidayType">Government Holiday</div></div></div></div>
 
     <div class="holiday-countdown-widget"><div class="countdown-header"><i class="fas fa-hourglass-half"></i><span>Countdown to Next Holiday</span></div><div class="countdown-timer-large"><div class="countdown-item"><span class="countdown-value" id="countdownDaysValue">00</span><span class="countdown-unit">Days</span></div><div class="countdown-item"><span class="countdown-value" id="countdownHoursValue">00</span><span class="countdown-unit">Hours</span></div><div class="countdown-item"><span class="countdown-value" id="countdownMinutesValue">00</span><span class="countdown-unit">Mins</span></div><div class="countdown-item"><span class="countdown-value" id="countdownSecondsValue">00</span><span class="countdown-unit">Secs</span></div></div><div class="countdown-holiday-name" id="countdownHolidayName">Loading...</div></div>
 
-    <!-- TOP AD BANNER -->
+    <!-- TOP AD BANNER - All Ad Codes -->
     <div class="ad-top-container">
         <span class="ad-label">ADVERTISEMENT</span>
         <div class="ad-banner" id="topAdBanner">
+            <!-- Ad Script 1 container -->
+            <div id="topAdContainer"></div>
+            <!-- Ad Script 3 container (new) -->
             <div id="container-29b16b23a42fbaf6138dad3e0889e02e">
                 <div class="loading-ad"><i class="fas fa-spinner fa-pulse"></i> Loading advertisement...</div>
             </div>
@@ -283,6 +120,9 @@
     <div class="ad-middle-container">
         <span class="ad-label">SPONSORED CONTENT</span>
         <div class="ad-banner" id="middleAdBanner">
+            <!-- Ad Script 2 container -->
+            <div id="middleAdContainer"></div>
+            <!-- Ad Script 3 middle container (new) -->
             <div id="container-29b16b23a42fbaf6138dad3e0889e02e-middle">
                 <div class="loading-ad"><i class="fas fa-spinner fa-pulse"></i> Loading advertisement...</div>
             </div>
@@ -294,147 +134,35 @@
     <div class="features-section" id="featuresSection"><div class="features-grid"><div class="feature-card"><div class="feature-icon"><i class="fas fa-tachometer-alt"></i></div><h4>Ultra-Fast Streaming</h4><p>Optimized servers for buffer-free experience</p></div><div class="feature-card"><div class="feature-icon"><i class="fas fa-tv"></i></div><h4>HD Quality</h4><p>Crystal clear 1080p resolution</p></div><div class="feature-card"><div class="feature-icon"><i class="fas fa-clock"></i></div><h4>24/7 Uptime</h4><p>Always online, always streaming</p></div><div class="feature-card"><div class="feature-icon"><i class="fas fa-shield-alt"></i></div><h4>Legal & Safe</h4><p>Fully compliant streaming platform</p></div></div></div>
 
     <!-- Testimonials Section -->
-    <div class="testimonials-section" id="reviewsSection">
-        <div class="section-header"><h3><i class="fas fa-star"></i> User Reviews & Testimonials</h3><button class="write-review-btn" id="writeReviewBtn"><i class="fas fa-pen"></i> Write a Review</button></div>
-        <div class="reviews-grid" id="reviewsGrid"></div>
-        <div class="review-stats">
-            <div class="stat-card">
-                <div class="stat-value" id="avgRating">0</div>
-                <div class="stat-label">Average Rating</div>
-                <div class="stars-display" id="avgStarsDisplay"></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="totalReviews">0</div>
-                <div class="stat-label">Total Reviews</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="satisfactionRate">0%</div>
-                <div class="stat-label">Satisfaction Rate</div>
-            </div>
-        </div>
-    </div>
+    <div class="testimonials-section" id="reviewsSection"><div class="section-header"><h3><i class="fas fa-star"></i> User Reviews & Testimonials</h3><button class="write-review-btn" id="writeReviewBtn"><i class="fas fa-pen"></i> Write a Review</button></div><div class="reviews-grid" id="reviewsGrid"></div><div class="review-stats"><div class="stat-card"><div class="stat-value" id="avgRating">0</div><div class="stat-label">Average Rating</div><div class="stars-display" id="avgStarsDisplay"></div></div><div class="stat-card"><div class="stat-value" id="totalReviews">0</div><div class="stat-label">Total Reviews</div></div><div class="stat-card"><div class="stat-value" id="satisfactionRate">0%</div><div class="stat-label">Satisfaction Rate</div></div></div></div>
 
     <!-- Write Review Modal -->
-    <div id="reviewModal" class="custom-modal">
-        <div class="custom-modal-content review-modal-content">
-            <div class="custom-modal-header"><h3><i class="fas fa-star"></i> Write Your Review</h3><button class="custom-modal-close" id="closeReviewModal">&times;</button></div>
-            <div class="custom-modal-body"><p class="review-note">Share your experience with CHALUNG. No login required!</p>
-                <div class="rating-input"><label>Your Rating</label>
-                    <div class="star-rating" id="starRating"><i class="far fa-star" data-rating="1"></i><i class="far fa-star" data-rating="2"></i>
-                        <i class="far fa-star" data-rating="3"></i><i class="far fa-star" data-rating="4"></i><i class="far fa-star" data-rating="5"></i>
-                    </div>
-                    <input type="hidden" id="selectedRating" value="0">
-                </div>
-                <div class="review-input-group"><label>Your Name (Optional)</label><input type="text" id="reviewerName" placeholder="e.g., Rahim from Dhaka" maxlength="50"></div>
-                <div class="review-input-group"><label>Your Review</label><textarea id="reviewText" rows="4" placeholder="Tell us about your experience with CHALUNG..." maxlength="500"></textarea></div>
-                <div class="review-input-group"><label>Would you recommend CHALUNG?</label>
-                    <div class="recommend-buttons"><label class="recommend-option"><input type="radio" name="recommend" value="yes"> Yes, definitely!</label>
-                        <label class="recommend-option"><input type="radio" name="recommend" value="maybe"> Maybe</label>
-                        <label class="recommend-option"><input type="radio" name="recommend" value="no"> No</label>
-                    </div>
-                </div>
-            </div>
-            <div class="custom-modal-footer"><button class="modal-close-btn" id="cancelReviewBtn">Cancel</button>
-                <button class="modal-submit-btn" id="submitReviewBtn">Submit Review</button>
-            </div>
-        </div>
-    </div>
+    <div id="reviewModal" class="custom-modal"><div class="custom-modal-content review-modal-content"><div class="custom-modal-header"><h3><i class="fas fa-star"></i> Write Your Review</h3><button class="custom-modal-close" id="closeReviewModal">&times;</button></div><div class="custom-modal-body"><p class="review-note">Share your experience with CHALUNG. No login required!</p><div class="rating-input"><label>Your Rating</label><div class="star-rating" id="starRating"><i class="far fa-star" data-rating="1"></i><i class="far fa-star" data-rating="2"></i><i class="far fa-star" data-rating="3"></i><i class="far fa-star" data-rating="4"></i><i class="far fa-star" data-rating="5"></i></div><input type="hidden" id="selectedRating" value="0"></div><div class="review-input-group"><label>Your Name (Optional)</label><input type="text" id="reviewerName" placeholder="e.g., Rahim from Dhaka" maxlength="50"></div><div class="review-input-group"><label>Your Review</label><textarea id="reviewText" rows="4" placeholder="Tell us about your experience with CHALUNG..." maxlength="500"></textarea></div><div class="review-input-group"><label>Would you recommend CHALUNG?</label><div class="recommend-buttons"><label class="recommend-option"><input type="radio" name="recommend" value="yes"> Yes, definitely!</label><label class="recommend-option"><input type="radio" name="recommend" value="maybe"> Maybe</label><label class="recommend-option"><input type="radio" name="recommend" value="no"> No</label></div></div></div><div class="custom-modal-footer"><button class="modal-close-btn" id="cancelReviewBtn">Cancel</button><button class="modal-submit-btn" id="submitReviewBtn">Submit Review</button></div></div></div>
 
     <!-- BOTTOM AD BANNER -->
     <div class="ad-bottom-container">
         <span class="ad-label">PROMOTION</span>
         <div class="ad-banner" id="bottomAdBanner">
+            <!-- Ad Script 3 bottom container (new) -->
             <div id="container-29b16b23a42fbaf6138dad3e0889e02e-bottom">
                 <div class="loading-ad"><i class="fas fa-spinner fa-pulse"></i> Loading advertisement...</div>
             </div>
         </div>
     </div>
 
-    <div class="footer">
-        <div class="copyright">© 2026 CHALUNG. Premium Live TV Streaming.</div>
-        <div class="footer-links"><a href="#" id="privacyFooterBtn">Privacy Policy</a>
-            <a href="#" id="legalFooterBtn">Terms of Service</a>
-            <a href="#" id="holidaysFooterBtn">Holiday Calendar</a>
-            <a href="#" id="reviewsFooterBtn">User Reviews</a>
-            <a href="#" id="cookieSettingsFooter">Cookie Settings</a>
-        </div>
-        <div class="social-links">
-            <a href="#" id="shareFbFooter"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" id="shareTwFooter"><i class="fab fa-twitter"></i></a>
-            <a href="#" id="shareWaFooter"><i class="fab fa-whatsapp"></i></a>
-        </div>
-    </div>
+    <div class="footer"><div class="copyright">© 2026 CHALUNG. Premium Live TV Streaming.</div><div class="footer-links"><a href="#" id="privacyFooterBtn">Privacy Policy</a><a href="#" id="legalFooterBtn">Terms of Service</a><a href="#" id="holidaysFooterBtn">Holiday Calendar</a><a href="#" id="reviewsFooterBtn">User Reviews</a><a href="#" id="cookieSettingsFooter">Cookie Settings</a></div><div class="social-links"><a href="#" id="shareFbFooter"><i class="fab fa-facebook-f"></i></a><a href="#" id="shareTwFooter"><i class="fab fa-twitter"></i></a><a href="#" id="shareWaFooter"><i class="fab fa-whatsapp"></i></a></div></div>
 </div>
 
 <button class="back-to-top" id="backToTopBtn"><i class="fas fa-arrow-up"></i></button>
 
 <!-- Holidays Modal -->
-<div id="holidaysModal" class="cookie-modal">
-    <div class="cookie-modal-content policy-modal holidays-modal">
-        <div class="cookie-modal-header"><h3>🎊 Bangladesh & International Holidays 2026 🎊</h3>
-            <button class="cookie-modal-close" id="closeHolidaysModal">&times;</button>
-        </div>
-        <div class="cookie-modal-body policy-body holidays-body">
-            <div class="current-holiday-highlight" id="currentHolidayHighlight"></div>
-                <h4>Bangladesh Government Holidays 2026</h4>
-            <div class="holiday-list" id="bangladeshHolidays"></div>
-                <h4>International Holidays 2026</h4>
-            <div class="holiday-list" id="internationalHolidays"></div>
-                <h4>Islamic Holidays 2026</h4>
-            <div class="holiday-list" id="islamicHolidays"></div>
-                <p class="holiday-note">Islamic holidays are subject to moon sighting and may vary by 1-2 days.</p>
-        </div>
-        <div class="cookie-modal-footer"><button class="cookie-modal-save" id="closeHolidaysBtn">Close</button></div>
-    </div>
-</div>
+<div id="holidaysModal" class="cookie-modal"><div class="cookie-modal-content policy-modal holidays-modal"><div class="cookie-modal-header"><h3>🎊 Bangladesh & International Holidays 2026 🎊</h3><button class="cookie-modal-close" id="closeHolidaysModal">&times;</button></div><div class="cookie-modal-body policy-body holidays-body"><div class="current-holiday-highlight" id="currentHolidayHighlight"></div><h4>Bangladesh Government Holidays 2026</h4><div class="holiday-list" id="bangladeshHolidays"></div><h4>International Holidays 2026</h4><div class="holiday-list" id="internationalHolidays"></div><h4>Islamic Holidays 2026</h4><div class="holiday-list" id="islamicHolidays"></div><p class="holiday-note">Islamic holidays are subject to moon sighting and may vary by 1-2 days.</p></div><div class="cookie-modal-footer"><button class="cookie-modal-save" id="closeHolidaysBtn">Close</button></div></div></div>
 
 <!-- Privacy Policy Modal -->
-<div id="privacyModal" class="cookie-modal">
-    <div class="cookie-modal-content policy-modal">
-        <div class="cookie-modal-header">
-            <h3>Privacy Policy</h3>
-                <button class="cookie-modal-close" id="closePrivacyModal">&times;</button>
-        </div>
-        <div class="cookie-modal-body policy-body">
-            <h4>Information We Collect</h4>
-            <p>We collect information you provide directly to us.</p>
-            <h4>Cookies and Tracking</h4>
-            <p>We use cookies to track activity on our service.</p>
-            <h4>Data Security</h4>
-            <p>We implement security measures to protect your information.</p>
-            <h4>Contact Us</h4>
-            <p>Email: privacy@chalung.com</p>
-            <p class="policy-date">Last Updated: January 1, 2026</p>
-        </div>
-        <div class="cookie-modal-footer">
-            <button class="cookie-modal-save" id="closePrivacyBtn">I Understand</button>
-        </div>
-    </div>
-</div>
+<div id="privacyModal" class="cookie-modal"><div class="cookie-modal-content policy-modal"><div class="cookie-modal-header"><h3>Privacy Policy</h3><button class="cookie-modal-close" id="closePrivacyModal">&times;</button></div><div class="cookie-modal-body policy-body"><h4>Information We Collect</h4><p>We collect information you provide directly to us.</p><h4>Cookies and Tracking</h4><p>We use cookies to track activity on our service.</p><h4>Data Security</h4><p>We implement security measures to protect your information.</p><h4>Contact Us</h4><p>Email: privacy@chalung.com</p><p class="policy-date">Last Updated: January 1, 2026</p></div><div class="cookie-modal-footer"><button class="cookie-modal-save" id="closePrivacyBtn">I Understand</button></div></div></div>
 
 <!-- Legal Modal -->
-<div id="legalModal" class="cookie-modal">
-    <div class="cookie-modal-content policy-modal">
-        <div class="cookie-modal-header">
-            <h3>Legal & Safety Information</h3>
-            <button class="cookie-modal-close" id="closeLegalModal">&times;</button>
-        </div>
-        <div class="cookie-modal-body policy-body">
-            <h4>Terms of Service</h4>
-            <p>By using CHALUNG, you agree to these Terms of Service.</p>
-            <h4>Copyright</h4>
-            <p>All content is owned by CHALUNG or licensed from third parties.</p>
-            <h4>DMCA Compliance</h4>
-            <p>Contact: dmca@chalung.com</p>
-            <h4>Governing Law</h4>
-            <p>These terms are governed by the laws of Bangladesh.</p>
-            <p class="policy-date">Last Updated: January 1, 2026</p>
-        </div>
-        <div class="cookie-modal-footer">
-            <button class="cookie-modal-save" id="closeLegalBtn">I Agree</button>
-        </div>
-    </div>
-</div>
+<div id="legalModal" class="cookie-modal"><div class="cookie-modal-content policy-modal"><div class="cookie-modal-header"><h3>Legal & Safety Information</h3><button class="cookie-modal-close" id="closeLegalModal">&times;</button></div><div class="cookie-modal-body policy-body"><h4>Terms of Service</h4><p>By using CHALUNG, you agree to these Terms of Service.</p><h4>Copyright</h4><p>All content is owned by CHALUNG or licensed from third parties.</p><h4>DMCA Compliance</h4><p>Contact: dmca@chalung.com</p><h4>Governing Law</h4><p>These terms are governed by the laws of Bangladesh.</p><p class="policy-date">Last Updated: January 1, 2026</p></div><div class="cookie-modal-footer"><button class="cookie-modal-save" id="closeLegalBtn">I Agree</button></div></div></div>
 
 <!-- Cookie Consent Banner -->
 <div id="cookieConsent" class="cookie-consent"><div class="cookie-content"><div class="cookie-icon"><i class="fas fa-cookie-bite"></i></div><div class="cookie-text"><h4>🍪 We Value Your Privacy</h4><p>We use essential cookies for website functionality. Optional cookies help us improve your experience.</p></div><div class="cookie-buttons"><button class="cookie-btn cookie-settings" id="cookieSettingsBtn">Customize</button><button class="cookie-btn cookie-deny" id="cookieDenyBtn">Deny Optional</button><button class="cookie-btn cookie-accept" id="cookieAcceptBtn">Accept All</button></div></div></div>
