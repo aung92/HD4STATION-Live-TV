@@ -4,13 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes, maximum-scale=1.0">
     <title>CHALUNG | Premium Live TV Streaming</title>
-    <meta name="description" content="CHALUNG - Experience crystal clear HD live TV streaming. Watch your favorite channels 24/7 with zero buffering. Free and premium quality streams.">
+    <meta name="description" content="CHALUNG - Experience crystal clear HD live TV streaming with dynamic holiday themes and celebrations.">
     <meta name="keywords" content="live tv, hd streaming, free tv, bangladesh tv, mirraby, ash tv, online tv, chalung">
     <meta name="author" content="CHALUNG">
     <meta name="theme-color" content="#00C4B4">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- Confetti Library for Celebrations -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
     
     <!-- Profitable CPM Network Ads -->
     <script src="https://pl29095811.profitablecpmratenetwork.com/cc/d4/c3/ccd4c362f4552fba4c2d4221a0c17e8d.js"></script>
@@ -19,7 +22,13 @@
 <body>
 <div class="bg-gradient"></div>
 
-<!-- Floating Social Icons - Left Side -->
+<!-- Animated Holiday Icons Background -->
+<div class="animated-icons-bg" id="animatedIconsBg"></div>
+
+<!-- Random Celebration Effects Container -->
+<div id="celebrationEffects" class="celebration-effects"></div>
+
+<!-- Floating Social Icons -->
 <div class="floating-social-icons">
     <div class="social-icon-item" id="floatingFb">
         <i class="fab fa-facebook-f"></i>
@@ -43,16 +52,64 @@
     </div>
 </div>
 
+<!-- Floating Developer Section -->
+<div class="floating-dev-section" id="floatingDevSection">
+    <div class="dev-toggle-btn" id="devToggleBtn">
+        <i class="fas fa-code"></i>
+        <span class="dev-tooltip">Developer Tools</span>
+    </div>
+    <div class="dev-panel" id="devPanel">
+        <div class="dev-header">
+            <i class="fas fa-cogs"></i>
+            <h3>Theme & Design Tester</h3>
+            <button class="dev-close" id="devCloseBtn">&times;</button>
+        </div>
+        <div class="dev-body">
+            <div class="dev-section">
+                <h4><i class="fas fa-palette"></i> Theme Selector</h4>
+                <div class="theme-buttons">
+                    <button class="theme-btn" data-theme="default">Default</button>
+                    <button class="theme-btn" data-theme="pohela">🎨 Pohela Boishakh</button>
+                    <button class="theme-btn" data-theme="eid">🕌 Eid</button>
+                    <button class="theme-btn" data-theme="buddha">🪷 Buddha Purnima</button>
+                    <button class="theme-btn" data-theme="durga">🔱 Durga Puja</button>
+                    <button class="theme-btn" data-theme="newyear">🎆 New Year</button>
+                    <button class="theme-btn" data-theme="independence">🇧🇩 Independence</button>
+                    <button class="theme-btn" data-theme="victory">🏆 Victory Day</button>
+                </div>
+            </div>
+            
+            <div class="dev-section">
+                <h4><i class="fas fa-magic"></i> Animation Effects</h4>
+                <div class="effect-buttons">
+                    <button class="effect-btn" data-effect="confetti">🎉 Confetti</button>
+                    <button class="effect-btn" data-effect="fireworks">🎆 Fireworks</button>
+                    <button class="effect-btn" data-effect="snow">❄️ Snow</button>
+                    <button class="effect-btn" data-effect="ripple">💧 Ripple</button>
+                    <button class="effect-btn" data-effect="party">🎊 Party Mode</button>
+                    <button class="effect-btn" data-effect="wind">💨 Wind</button>
+                    <button class="effect-btn" data-effect="stars">⭐ Stars</button>
+                </div>
+            </div>
+            
+            <div class="dev-status">
+                <i class="fas fa-info-circle"></i>
+                <span id="devStatusMsg">Ready for testing</span>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="landing-container">
     <!-- Navigation -->
     <nav class="navbar">
         <div class="logo">
-            <div class="logo-icon">
+            <div class="logo-icon" id="logoIcon">
                 <i class="fas fa-broadcast-tower"></i>
             </div>
             <div class="logo-text">
-                <h1>CHALUNG</h1>
-                <p>Premium Live TV</p>
+                <h1 id="logoTitle">CHALUNG</h1>
+                <p id="logoSlogan">Premium Live TV</p>
             </div>
         </div>
         <div class="nav-links">
@@ -66,6 +123,18 @@
             </div>
         </div>
     </nav>
+
+    <!-- Celebration Banner -->
+    <div id="celebrationBanner" class="celebration-banner" style="display: none;">
+        <div class="celebration-content">
+            <div class="celebration-icon" id="celebrationIcon">🎉</div>
+            <div class="celebration-text">
+                <h3 id="celebrationTitle">Happy Holiday!</h3>
+                <p id="celebrationMessage">Wishing you a wonderful celebration</p>
+            </div>
+            <button class="celebration-close" id="closeCelebration">&times;</button>
+        </div>
+    </div>
 
     <!-- Current Date & Time Bar -->
     <div class="datetime-bar" id="datetimeBar">
@@ -92,18 +161,45 @@
         </div>
     </div>
 
-    <!-- Current Holiday Display -->
+    <!-- Current Holiday Display Card -->
     <div id="currentHolidayDisplay" class="current-holiday-card" style="display: none;">
         <div class="current-holiday-inner">
-            <div class="holiday-icon">
+            <div class="holiday-icon" id="holidayIconDisplay">
                 <i class="fas fa-gift"></i>
             </div>
             <div class="holiday-info">
-                <div class="holiday-label">TODAY'S HOLIDAY</div>
+                <div class="holiday-label" id="holidayLabel">TODAY'S HOLIDAY</div>
                 <div class="holiday-name" id="currentHolidayName">Loading...</div>
                 <div class="holiday-type-badge" id="currentHolidayType">Government Holiday</div>
             </div>
         </div>
+    </div>
+
+    <!-- Animated Holiday Countdown Widget -->
+    <div class="holiday-countdown-widget">
+        <div class="countdown-header">
+            <i class="fas fa-hourglass-half"></i>
+            <span>Countdown to Next Holiday</span>
+        </div>
+        <div class="countdown-timer-large">
+            <div class="countdown-item">
+                <span class="countdown-value" id="countdownDaysValue">00</span>
+                <span class="countdown-unit">Days</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-value" id="countdownHoursValue">00</span>
+                <span class="countdown-unit">Hours</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-value" id="countdownMinutesValue">00</span>
+                <span class="countdown-unit">Mins</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-value" id="countdownSecondsValue">00</span>
+                <span class="countdown-unit">Secs</span>
+            </div>
+        </div>
+        <div class="countdown-holiday-name" id="countdownHolidayName">Loading...</div>
     </div>
 
     <!-- Top Ad Banner -->
@@ -117,9 +213,9 @@
     <!-- Hero Section -->
     <div class="hero-section" id="playerSection">
         <div class="hero-content">
-            <span class="hero-badge">LIVE STREAMING</span>
-            <h2>Experience Crystal Clear HD Live TV</h2>
-            <p>Watch your favorite channels in stunning HD quality. Zero buffering, 24/7 uptime, and completely free.</p>
+            <span class="hero-badge" id="heroBadge">LIVE STREAMING</span>
+            <h2 id="heroTitle">Experience Crystal Clear HD Live TV</h2>
+            <p id="heroDescription">Watch your favorite channels in stunning HD quality. Zero buffering, 24/7 uptime, and completely free.</p>
             <div class="hero-stats">
                 <div class="stat">
                     <div class="stat-number">2</div>
@@ -248,21 +344,17 @@
 <div id="holidaysModal" class="cookie-modal">
     <div class="cookie-modal-content policy-modal holidays-modal">
         <div class="cookie-modal-header">
-            <h3>Bangladesh & International Holidays 2026</h3>
+            <h3>🎊 Bangladesh & International Holidays 2026 🎊</h3>
             <button class="cookie-modal-close" id="closeHolidaysModal">&times;</button>
         </div>
         <div class="cookie-modal-body policy-body holidays-body">
             <div class="current-holiday-highlight" id="currentHolidayHighlight"></div>
-            
             <h4>Bangladesh Government Holidays 2026</h4>
             <div class="holiday-list" id="bangladeshHolidays"></div>
-            
             <h4>International Holidays 2026</h4>
             <div class="holiday-list" id="internationalHolidays"></div>
-            
             <h4>Islamic Holidays 2026</h4>
             <div class="holiday-list" id="islamicHolidays"></div>
-            
             <p class="holiday-note">Islamic holidays are subject to moon sighting and may vary by 1-2 days.</p>
         </div>
         <div class="cookie-modal-footer">
@@ -287,7 +379,7 @@
             <p>We implement security measures to protect your information.</p>
             <h4>Contact Us</h4>
             <p>Email: privacy@chalung.com</p>
-            <p class="policy-date"><strong>Last Updated:</strong> January 1, 2026</p>
+            <p class="policy-date">Last Updated: January 1, 2026</p>
         </div>
         <div class="cookie-modal-footer">
             <button class="cookie-modal-save" id="closePrivacyBtn">I Understand</button>
@@ -311,7 +403,7 @@
             <p>Contact: dmca@chalung.com</p>
             <h4>Governing Law</h4>
             <p>These terms are governed by the laws of Bangladesh.</p>
-            <p class="policy-date"><strong>Last Updated:</strong> January 1, 2026</p>
+            <p class="policy-date">Last Updated: January 1, 2026</p>
         </div>
         <div class="cookie-modal-footer">
             <button class="cookie-modal-save" id="closeLegalBtn">I Agree</button>
@@ -319,83 +411,59 @@
     </div>
 </div>
 
-<!-- Cookie Consent Banner - UPDATED -->
+<!-- Cookie Consent Banner -->
 <div id="cookieConsent" class="cookie-consent">
     <div class="cookie-content">
-        <div class="cookie-icon">
-            <i class="fas fa-cookie-bite"></i>
-        </div>
+        <div class="cookie-icon"><i class="fas fa-cookie-bite"></i></div>
         <div class="cookie-text">
             <h4>🍪 We Value Your Privacy</h4>
-            <p>We use essential cookies for website functionality. Optional cookies help us improve your experience. Choose your preference below.</p>
+            <p>We use essential cookies for website functionality. Optional cookies help us improve your experience.</p>
         </div>
         <div class="cookie-buttons">
-            <button class="cookie-btn cookie-settings" id="cookieSettingsBtn">
-                <i class="fas fa-sliders-h"></i> Customize
-            </button>
-            <button class="cookie-btn cookie-deny" id="cookieDenyBtn">
-                <i class="fas fa-times"></i> Deny Optional
-            </button>
-            <button class="cookie-btn cookie-accept" id="cookieAcceptBtn">
-                <i class="fas fa-check"></i> Accept All
-            </button>
+            <button class="cookie-btn cookie-settings" id="cookieSettingsBtn">Customize</button>
+            <button class="cookie-btn cookie-deny" id="cookieDenyBtn">Deny Optional</button>
+            <button class="cookie-btn cookie-accept" id="cookieAcceptBtn">Accept All</button>
         </div>
     </div>
 </div>
 
-<!-- Cookie Settings Modal - UPDATED -->
+<!-- Cookie Settings Modal -->
 <div id="cookieSettingsModal" class="cookie-modal">
     <div class="cookie-modal-content">
         <div class="cookie-modal-header">
-            <h3><i class="fas fa-cookie-bite"></i> Cookie Preferences</h3>
+            <h3>Cookie Preferences</h3>
             <button class="cookie-modal-close" id="closeSettingsModal">&times;</button>
         </div>
         <div class="cookie-modal-body">
-            <p>Customize your cookie preferences below. Essential cookies are necessary for the website to function properly and cannot be disabled.</p>
-            
+            <p>Customize your cookie preferences below. Essential cookies are necessary for the website to function properly.</p>
             <div class="cookie-option essential">
                 <div class="cookie-option-info">
-                    <h4>✅ Essential Cookies</h4>
-                    <p>Required for basic website functionality. These cookies enable core features like security, network management, and accessibility.</p>
+                    <h4>Essential Cookies</h4>
+                    <p>Required for basic functionality. Cannot be disabled.</p>
                     <p class="cookie-status">Always Active</p>
                 </div>
-                <label class="cookie-toggle disabled">
-                    <input type="checkbox" checked disabled>
-                    <span class="toggle-slider"></span>
-                </label>
+                <label class="cookie-toggle disabled"><input type="checkbox" checked disabled><span class="toggle-slider"></span></label>
             </div>
-            
             <div class="cookie-option">
                 <div class="cookie-option-info">
-                    <h4>📝 Functional Cookies</h4>
-                    <p>Remember your preferences, such as language, region, and previously selected server. Enhances your browsing experience.</p>
+                    <h4>Functional Cookies</h4>
+                    <p>Remember your preferences and enhance your experience.</p>
                 </div>
-                <label class="cookie-toggle">
-                    <input type="checkbox" id="functionalCookiesToggle" checked>
-                    <span class="toggle-slider"></span>
-                </label>
+                <label class="cookie-toggle"><input type="checkbox" id="functionalCookiesToggle" checked><span class="toggle-slider"></span></label>
             </div>
-            
             <div class="cookie-option">
                 <div class="cookie-option-info">
-                    <h4>📊 Analytics Cookies</h4>
-                    <p>Help us understand how visitors interact with our website by collecting anonymous information. This helps us improve our service.</p>
+                    <h4>Analytics Cookies</h4>
+                    <p>Help us understand how visitors interact with our website.</p>
                 </div>
-                <label class="cookie-toggle">
-                    <input type="checkbox" id="analyticsCookiesToggle" checked>
-                    <span class="toggle-slider"></span>
-                </label>
+                <label class="cookie-toggle"><input type="checkbox" id="analyticsCookiesToggle" checked><span class="toggle-slider"></span></label>
             </div>
-            
             <div class="cookie-option">
                 <div class="cookie-option-info">
-                    <h4>🎯 Advertising Cookies</h4>
-                    <p>Used to deliver personalized advertisements based on your interests. These cookies help us keep our service free.</p>
+                    <h4>Advertising Cookies</h4>
+                    <p>Used to deliver personalized advertisements.</p>
                 </div>
-                <label class="cookie-toggle">
-                    <input type="checkbox" id="advertisingCookiesToggle" checked>
-                    <span class="toggle-slider"></span>
-                </label>
+                <label class="cookie-toggle"><input type="checkbox" id="advertisingCookiesToggle" checked><span class="toggle-slider"></span></label>
             </div>
         </div>
         <div class="cookie-modal-footer">

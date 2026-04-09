@@ -18,8 +18,14 @@
 
     let activeServerId = 0;
     let isFullscreen = false;
+    let currentTheme = 'default';
+    let snowInterval = null;
+    let rippleInterval = null;
+    let randomEffectInterval = null;
+    let starsInterval = null;
+    let windInterval = null;
+    let partyInterval = null;
     
-    // Cookie preferences - Default values
     let cookiePreferences = {
         functional: true,
         analytics: true,
@@ -34,43 +40,40 @@
     const playerSection = document.getElementById('playerSection');
     const backToTopBtn = document.getElementById('backToTopBtn');
     const datetimeBar = document.getElementById('datetimeBar');
+    const iconsBg = document.getElementById('animatedIconsBg');
 
     const CURRENT_YEAR = 2026;
     
+    // Holiday Icon Sets for different themes
+    const HOLIDAY_ICONS = {
+        pohela: ['🎨', '🥁', '🎭', '🌸', '🌼', '🎪', '🪘', '🎋', '🏵️', '🌺', '🪔', '🎊'],
+        eid: ['🕌', '🌙', '⭐', '🐑', '🐄', '🕋', '📿', '🌟', '✨', '🎇', '🕊️', '🤲'],
+        buddha: ['🪷', '🧘', '🙏', '🌸', '🕉️', '☸️', '🏯', '🔔', '📿', '🍃', '🌿', '✨'],
+        durga: ['🔱', '🪔', '👁️', '🌸', '🎭', '🕉️', '🔔', '🌺', '🪶', '🎨', '🪘', '🎊'],
+        newyear: ['🎆', '🎇', '✨', '🎉', '🎊', '🍾', '🥂', '🕛', '🎈', '🎶', '💫', '🌟'],
+        independence: ['🇧🇩', '🟥', '🟢', '⭐', '🏛️', '📜', '🎖️', '🏅', '🌙', '☀️', '🕊️', '🎈'],
+        victory: ['🏆', '🇧🇩', '✌️', '🎖️', '🏅', '🎉', '🕊️', '⭐', '🌟', '🏛️', '📜', '🎊'],
+        default: ['✨', '⭐', '🌟', '💫', '⚡', '🌀', '🌈', '🎵', '🎶', '💎', '🔮', '🌸']
+    };
+
     const HOLIDAYS = {
         bangladesh: [
-            { name: "Bengali New Year (Pohela Boishakh)", date: "2026-04-14", type: "govt", icon: "fa-calendar-alt" },
-            { name: "International Mother Language Day", date: "2026-02-21", type: "govt", icon: "fa-language" },
-            { name: "Independence Day", date: "2026-03-26", type: "govt", icon: "fa-flag" },
-            { name: "Victory Day", date: "2026-12-16", type: "govt", icon: "fa-trophy" },
-            { name: "National Mourning Day", date: "2026-08-15", type: "govt", icon: "fa-heart" },
-            { name: "Birthday of Sheikh Mujibur Rahman", date: "2026-03-17", type: "govt", icon: "fa-star" },
-            { name: "May Day", date: "2026-05-01", type: "govt", icon: "fa-briefcase" },
-            { name: "Christmas Day", date: "2026-12-25", type: "govt", icon: "fa-church" },
-            { name: "Buddha Purnima", date: "2026-05-01", type: "govt", icon: "fa-pray" }
+            { name: "Pohela Boishakh", date: "2026-04-14", type: "govt", icon: "fa-calendar-alt", theme: "pohela", message: "Shubho Noboborsho! ❤️", bgIcon: "🌸" },
+            { name: "International Mother Language Day", date: "2026-02-21", type: "govt", icon: "fa-language", theme: "default", message: "সব ভাষার জন্য ভালোবাসা", bgIcon: "📚" },
+            { name: "Independence Day", date: "2026-03-26", type: "govt", icon: "fa-flag", theme: "independence", message: "স্বাধীনতা দিবসের শুভেচ্ছা! 🇧🇩", bgIcon: "🇧🇩" },
+            { name: "Victory Day", date: "2026-12-16", type: "govt", icon: "fa-trophy", theme: "victory", message: "বিজয় দিবসের শুভেচ্ছা! 🎉", bgIcon: "🏆" },
+            { name: "Buddha Purnima", date: "2026-05-05", type: "govt", icon: "fa-pray", theme: "buddha", message: "Buddha Purnima er Shubhechha! 🪷", bgIcon: "🪷" },
+            { name: "Durga Puja", date: "2026-10-20", type: "govt", icon: "fa-pray", theme: "durga", message: "Shubho Durga Puja! 🔱", bgIcon: "🔱" }
         ],
         international: [
-            { name: "New Year's Day", date: "2026-01-01", type: "international", icon: "fa-glass-cheers" },
-            { name: "International Women's Day", date: "2026-03-08", type: "international", icon: "fa-venus" },
-            { name: "Earth Day", date: "2026-04-22", type: "international", icon: "fa-globe" },
-            { name: "World Environment Day", date: "2026-06-05", type: "international", icon: "fa-leaf" },
-            { name: "International Youth Day", date: "2026-08-12", type: "international", icon: "fa-users" },
-            { name: "International Day of Peace", date: "2026-09-21", type: "international", icon: "fa-dove" },
-            { name: "United Nations Day", date: "2026-10-24", type: "international", icon: "fa-un" },
-            { name: "World Children's Day", date: "2026-11-20", type: "international", icon: "fa-child" },
-            { name: "Human Rights Day", date: "2026-12-10", type: "international", icon: "fa-gavel" }
+            { name: "New Year's Day", date: "2026-01-01", type: "international", icon: "fa-glass-cheers", theme: "newyear", message: "Happy New Year! 🎆", bgIcon: "🎆" }
         ],
         islamic: [
-            { name: "Shab-e-Barat", date: "2026-02-02", type: "islamic", icon: "fa-moon" },
-            { name: "Laylatul Qadr", date: "2026-04-16", type: "islamic", icon: "fa-star-of-life" },
-            { name: "Eid-ul-Fitr", date: "2026-04-20", type: "islamic", icon: "fa-star-and-crescent" },
-            { name: "Eid-ul-Azha", date: "2026-06-27", type: "islamic", icon: "fa-star-and-crescent" },
-            { name: "Ashura", date: "2026-07-26", type: "islamic", icon: "fa-hand-holding-heart" },
-            { name: "Eid-e-Milad-un-Nabi", date: "2026-09-25", type: "islamic", icon: "fa-praying-hands" }
+            { name: "Eid-ul-Fitr", date: "2026-04-20", type: "islamic", icon: "fa-star-and-crescent", theme: "eid", message: "Eid Mubarak! 🕌", bgIcon: "🕌" },
+            { name: "Eid-ul-Azha", date: "2026-06-27", type: "islamic", icon: "fa-star-and-crescent", theme: "eid", message: "Eid Mubarak! 🕌", bgIcon: "🕌" }
         ]
     };
 
-    // Helper Functions
     function showToast(message, type = 'success') {
         const existing = document.querySelector('.toast-message');
         if (existing) existing.remove();
@@ -80,6 +83,333 @@
         toast.innerHTML = `<i class="fas ${icon}" style="margin-right: 8px; color: #00C4B4;"></i> ${message}`;
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), 3000);
+    }
+
+    function updateDevStatus(message) {
+        const statusSpan = document.getElementById('devStatusMsg');
+        if (statusSpan) {
+            statusSpan.innerHTML = message;
+            setTimeout(() => {
+                if (statusSpan.innerHTML === message) {
+                    statusSpan.innerHTML = 'Ready for testing';
+                }
+            }, 3000);
+        }
+    }
+
+    // ========== ANIMATED BACKGROUND ICONS ==========
+    function generateFloatingIcons(theme) {
+        if (!iconsBg) return;
+        iconsBg.innerHTML = '';
+        
+        const icons = HOLIDAY_ICONS[theme] || HOLIDAY_ICONS.default;
+        const iconCount = window.innerWidth < 768 ? 30 : 60;
+        
+        for (let i = 0; i < iconCount; i++) {
+            const icon = document.createElement('div');
+            icon.className = 'floating-icon';
+            icon.innerHTML = icons[Math.floor(Math.random() * icons.length)];
+            icon.style.left = Math.random() * 100 + '%';
+            icon.style.fontSize = (Math.random() * 30 + 15) + 'px';
+            icon.style.animationDelay = Math.random() * 20 + 's';
+            icon.style.animationDuration = (Math.random() * 15 + 10) + 's';
+            icon.style.opacity = Math.random() * 0.15 + 0.05;
+            iconsBg.appendChild(icon);
+        }
+    }
+
+    // ========== RANDOM CELEBRATION EFFECTS ==========
+    function startRandomEffects() {
+        if (randomEffectInterval) clearInterval(randomEffectInterval);
+        
+        const effects = ['snow', 'stars', 'wind', 'party'];
+        
+        randomEffectInterval = setInterval(() => {
+            const randomEffect = effects[Math.floor(Math.random() * effects.length)];
+            if (randomEffect === 'snow') createSnowEffect(5);
+            else if (randomEffect === 'stars') createStarsEffect(3);
+            else if (randomEffect === 'wind') createWindEffect();
+            else if (randomEffect === 'party') createPartyEffect(5);
+        }, 8000);
+    }
+
+    function createSnowEffect(count = 10) {
+        const container = document.getElementById('celebrationEffects');
+        if (!container) return;
+        
+        for (let i = 0; i < count; i++) {
+            const snow = document.createElement('div');
+            snow.className = 'snow-particle';
+            snow.style.left = Math.random() * 100 + '%';
+            snow.style.width = Math.random() * 5 + 2 + 'px';
+            snow.style.height = snow.style.width;
+            snow.style.animationDuration = Math.random() * 3 + 2 + 's';
+            snow.style.animationDelay = Math.random() * 2 + 's';
+            container.appendChild(snow);
+            setTimeout(() => snow.remove(), 5000);
+        }
+    }
+
+    function createStarsEffect(count = 5) {
+        const container = document.getElementById('celebrationEffects');
+        if (!container) return;
+        
+        for (let i = 0; i < count; i++) {
+            const star = document.createElement('div');
+            star.className = 'star-particle';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.width = Math.random() * 30 + 15 + 'px';
+            star.style.height = star.style.width;
+            star.style.animationDuration = Math.random() * 1 + 1 + 's';
+            container.appendChild(star);
+            setTimeout(() => star.remove(), 2000);
+        }
+    }
+
+    function createWindEffect() {
+        const container = document.getElementById('celebrationEffects');
+        if (!container) return;
+        
+        for (let i = 0; i < 3; i++) {
+            const wind = document.createElement('div');
+            wind.className = 'wind-particle';
+            wind.style.top = Math.random() * 100 + '%';
+            wind.style.animationDelay = Math.random() * 2 + 's';
+            container.appendChild(wind);
+            setTimeout(() => wind.remove(), 4000);
+        }
+    }
+
+    function createPartyEffect(count = 8) {
+        const container = document.getElementById('celebrationEffects');
+        if (!container) return;
+        
+        const partyIcons = ['🎉', '🎊', '✨', '⭐', '💫', '🎈', '🎆', '🎇'];
+        
+        for (let i = 0; i < count; i++) {
+            const party = document.createElement('div');
+            party.className = 'party-particle';
+            party.innerHTML = partyIcons[Math.floor(Math.random() * partyIcons.length)];
+            party.style.left = Math.random() * 100 + '%';
+            party.style.top = Math.random() * 100 + '%';
+            party.style.fontSize = Math.random() * 20 + 15 + 'px';
+            party.style.animationDuration = Math.random() * 1.5 + 1 + 's';
+            container.appendChild(party);
+            setTimeout(() => party.remove(), 2000);
+        }
+    }
+
+    function createRippleEffect(x, y) {
+        const container = document.getElementById('celebrationEffects');
+        if (!container) return;
+        
+        const ripple = document.createElement('div');
+        ripple.className = 'ripple-particle';
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+        container.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 2000);
+    }
+
+    // ========== THEME MANAGEMENT ==========
+    function applyTheme(themeName, holidayMessage = null, bgIcon = null) {
+        currentTheme = themeName;
+        
+        document.body.classList.remove('theme-eid', 'theme-pohela', 'theme-buddha', 'theme-durga', 'theme-newyear', 'theme-independence', 'theme-victory', 'theme-default');
+        
+        if (themeName !== 'default') {
+            document.body.classList.add(`theme-${themeName}`);
+        } else {
+            document.body.classList.add('theme-default');
+        }
+        
+        generateFloatingIcons(themeName);
+        
+        if (holidayMessage && bgIcon) {
+            const banner = document.getElementById('celebrationBanner');
+            const titleEl = document.getElementById('celebrationTitle');
+            const msgEl = document.getElementById('celebrationMessage');
+            const iconEl = document.getElementById('celebrationIcon');
+            if (banner && titleEl && msgEl && iconEl) {
+                titleEl.innerHTML = `${bgIcon} ${holidayMessage} ${bgIcon}`;
+                msgEl.innerHTML = `Wishing you and your family a wonderful celebration from CHALUNG family!`;
+                iconEl.innerHTML = bgIcon;
+                banner.style.display = 'block';
+                triggerConfetti();
+                createPartyEffect(20);
+            }
+        }
+        
+        updateDevStatus(`Theme changed to: ${themeName}`);
+        showToast(`${getThemeName(themeName)} theme activated!`, 'success');
+    }
+    
+    function getThemeName(theme) {
+        const themes = {
+            eid: 'Eid',
+            pohela: 'Pohela Boishakh',
+            buddha: 'Buddha Purnima',
+            durga: 'Durga Puja',
+            newyear: 'New Year',
+            independence: 'Independence Day',
+            victory: 'Victory Day',
+            default: 'Default'
+        };
+        return themes[theme] || 'Default';
+    }
+
+    // ========== ANIMATION EFFECTS ==========
+    function triggerConfetti() {
+        canvasConfetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+        canvasConfetti({ particleCount: 100, spread: 100, origin: { y: 0.5, x: 0.3 }, startVelocity: 25 });
+        canvasConfetti({ particleCount: 100, spread: 100, origin: { y: 0.5, x: 0.7 }, startVelocity: 25 });
+        showToast('🎉 Confetti! Celebration effect triggered!', 'success');
+        updateDevStatus('Confetti effect played');
+    }
+    
+    function triggerFireworks() {
+        const duration = 3000;
+        const animationEnd = Date.now() + duration;
+        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1000 };
+        
+        function randomInRange(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+        
+        const interval = setInterval(function() {
+            const timeLeft = animationEnd - Date.now();
+            if (timeLeft <= 0) return clearInterval(interval);
+            
+            const particleCount = 50 * (timeLeft / duration);
+            canvasConfetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.9), y: Math.random() - 0.2 } }));
+        }, 250);
+        
+        showToast('🎆 Fireworks! Celebration effect triggered!', 'success');
+        updateDevStatus('Fireworks effect played');
+    }
+    
+    function startSnowEffect() {
+        if (snowInterval) clearInterval(snowInterval);
+        snowInterval = setInterval(() => createSnowEffect(15), 500);
+        showToast('❄️ Snow Effect Activated!', 'success');
+        updateDevStatus('Snow effect started');
+    }
+    
+    function stopSnowEffect() {
+        if (snowInterval) {
+            clearInterval(snowInterval);
+            snowInterval = null;
+        }
+        updateDevStatus('Snow effect stopped');
+    }
+    
+    function startRippleEffect() {
+        document.addEventListener('click', (e) => {
+            createRippleEffect(e.clientX, e.clientY);
+        });
+        showToast('💧 Ripple Effect Activated! Click anywhere!', 'success');
+        updateDevStatus('Ripple effect started');
+    }
+    
+    function startPartyMode() {
+        if (partyInterval) clearInterval(partyInterval);
+        partyInterval = setInterval(() => createPartyEffect(12), 2000);
+        showToast('🎊 Party Mode Activated! 🎊', 'success');
+        updateDevStatus('Party mode started');
+    }
+    
+    function stopPartyMode() {
+        if (partyInterval) {
+            clearInterval(partyInterval);
+            partyInterval = null;
+        }
+        updateDevStatus('Party mode stopped');
+    }
+    
+    function startWindEffect() {
+        if (windInterval) clearInterval(windInterval);
+        windInterval = setInterval(() => createWindEffect(), 3000);
+        showToast('💨 Wind Effect Activated!', 'success');
+        updateDevStatus('Wind effect started');
+    }
+    
+    function stopWindEffect() {
+        if (windInterval) {
+            clearInterval(windInterval);
+            windInterval = null;
+        }
+        updateDevStatus('Wind effect stopped');
+    }
+    
+    function startStarsEffect() {
+        if (starsInterval) clearInterval(starsInterval);
+        starsInterval = setInterval(() => createStarsEffect(8), 2000);
+        showToast('⭐ Stars Effect Activated!', 'success');
+        updateDevStatus('Stars effect started');
+    }
+    
+    function stopStarsEffect() {
+        if (starsInterval) {
+            clearInterval(starsInterval);
+            starsInterval = null;
+        }
+        updateDevStatus('Stars effect stopped');
+    }
+
+    // ========== DEVELOPER SECTION ==========
+    function initDeveloperSection() {
+        const devToggleBtn = document.getElementById('devToggleBtn');
+        const devPanel = document.getElementById('devPanel');
+        const devCloseBtn = document.getElementById('devCloseBtn');
+        
+        if (devToggleBtn && devPanel) {
+            devToggleBtn.addEventListener('click', () => {
+                devPanel.classList.toggle('show');
+            });
+        }
+        
+        if (devCloseBtn && devPanel) {
+            devCloseBtn.addEventListener('click', () => {
+                devPanel.classList.remove('show');
+            });
+        }
+        
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const theme = btn.dataset.theme;
+                applyTheme(theme);
+                if (devPanel) devPanel.classList.remove('show');
+            });
+        });
+        
+        document.querySelectorAll('.effect-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const effect = btn.dataset.effect;
+                if (effect === 'confetti') triggerConfetti();
+                else if (effect === 'fireworks') triggerFireworks();
+                else if (effect === 'snow') startSnowEffect();
+                else if (effect === 'ripple') startRippleEffect();
+                else if (effect === 'party') startPartyMode();
+                else if (effect === 'wind') startWindEffect();
+                else if (effect === 'stars') startStarsEffect();
+                if (devPanel) devPanel.classList.remove('show');
+            });
+        });
+        
+        const resetThemeBtn = document.getElementById('resetThemeBtn');
+        if (resetThemeBtn) {
+            resetThemeBtn.addEventListener('click', () => {
+                applyTheme('default');
+                if (snowInterval) clearInterval(snowInterval);
+                if (partyInterval) clearInterval(partyInterval);
+                if (windInterval) clearInterval(windInterval);
+                if (starsInterval) clearInterval(starsInterval);
+                updateDevStatus('All settings reset to default');
+                if (devPanel) devPanel.classList.remove('show');
+                showToast('All themes and effects reset!', 'success');
+            });
+        }
     }
 
     function escapeHtml(str) {
@@ -92,209 +422,7 @@
         });
     }
 
-    function trackEvent(eventName, eventData = {}) {
-        if (cookiePreferences.analytics) {
-            console.log(`[Analytics] ${eventName}:`, eventData);
-        }
-    }
-
-    // ========== COOKIE MANAGEMENT SYSTEM ==========
-    function initCookieConsent() {
-        const cookieBanner = document.getElementById('cookieConsent');
-        const acceptBtn = document.getElementById('cookieAcceptBtn');
-        const denyBtn = document.getElementById('cookieDenyBtn');
-        const settingsBtn = document.getElementById('cookieSettingsBtn');
-        const settingsModal = document.getElementById('cookieSettingsModal');
-        const closeSettingsModal = document.getElementById('closeSettingsModal');
-        const savePreferencesBtn = document.getElementById('saveCookiePreferencesBtn');
-        
-        // Load saved preferences
-        const savedConsent = localStorage.getItem('cookie_consent_given');
-        const savedPreferences = localStorage.getItem('cookie_preferences');
-        
-        if (savedPreferences) {
-            try {
-                cookiePreferences = JSON.parse(savedPreferences);
-            } catch(e) {
-                console.log('Error parsing saved preferences');
-            }
-        }
-        
-        // Show banner only if no consent given
-        if (!savedConsent) {
-            setTimeout(() => {
-                if (cookieBanner) cookieBanner.classList.add('show');
-            }, 500);
-        } else {
-            applyCookiePreferences();
-        }
-        
-        // Accept All Cookies
-        if (acceptBtn) {
-            acceptBtn.addEventListener('click', () => {
-                cookiePreferences = {
-                    essential: true,
-                    functional: true,
-                    analytics: true,
-                    advertising: true
-                };
-                saveCookiePreferences('all');
-                if (cookieBanner) cookieBanner.classList.remove('show');
-                showToast('All cookies accepted! Thank you for your preference.', 'success');
-                applyCookiePreferences();
-            });
-        }
-        
-        // Deny Optional Cookies (only essential)
-        if (denyBtn) {
-            denyBtn.addEventListener('click', () => {
-                cookiePreferences = {
-                    essential: true,
-                    functional: false,
-                    analytics: false,
-                    advertising: false
-                };
-                saveCookiePreferences('essential');
-                if (cookieBanner) cookieBanner.classList.remove('show');
-                showToast('Only essential cookies enabled. You can change this anytime in settings.', 'info');
-                applyCookiePreferences();
-            });
-        }
-        
-        // Open Settings Modal
-        if (settingsBtn) {
-            settingsBtn.addEventListener('click', () => {
-                // Load current preferences into modal
-                const functionalToggle = document.getElementById('functionalCookiesToggle');
-                const analyticsToggle = document.getElementById('analyticsCookiesToggle');
-                const advertisingToggle = document.getElementById('advertisingCookiesToggle');
-                
-                if (functionalToggle) functionalToggle.checked = cookiePreferences.functional;
-                if (analyticsToggle) analyticsToggle.checked = cookiePreferences.analytics;
-                if (advertisingToggle) advertisingToggle.checked = cookiePreferences.advertising;
-                
-                if (settingsModal) settingsModal.classList.add('show');
-            });
-        }
-        
-        // Close Settings Modal
-        if (closeSettingsModal) {
-            closeSettingsModal.addEventListener('click', () => {
-                if (settingsModal) settingsModal.classList.remove('show');
-            });
-        }
-        
-        // Close modal on outside click
-        window.addEventListener('click', (e) => {
-            if (e.target === settingsModal) {
-                settingsModal.classList.remove('show');
-            }
-        });
-        
-        // Save Preferences
-        if (savePreferencesBtn) {
-            savePreferencesBtn.addEventListener('click', () => {
-                const functionalToggle = document.getElementById('functionalCookiesToggle');
-                const analyticsToggle = document.getElementById('analyticsCookiesToggle');
-                const advertisingToggle = document.getElementById('advertisingCookiesToggle');
-                
-                cookiePreferences = {
-                    essential: true,
-                    functional: functionalToggle ? functionalToggle.checked : false,
-                    analytics: analyticsToggle ? analyticsToggle.checked : false,
-                    advertising: advertisingToggle ? advertisingToggle.checked : false
-                };
-                
-                saveCookiePreferences('custom');
-                if (settingsModal) settingsModal.classList.remove('show');
-                if (cookieBanner) cookieBanner.classList.remove('show');
-                showToast('Your cookie preferences have been saved!', 'success');
-                applyCookiePreferences();
-            });
-        }
-    }
-    
-    function saveCookiePreferences(type) {
-        localStorage.setItem('cookie_consent_given', 'true');
-        localStorage.setItem('cookie_consent_type', type);
-        localStorage.setItem('cookie_preferences', JSON.stringify(cookiePreferences));
-        
-        console.log('Cookie preferences saved:', {
-            type: type,
-            preferences: cookiePreferences,
-            timestamp: new Date().toISOString()
-        });
-    }
-    
-    function applyCookiePreferences() {
-        console.log('Applying cookie preferences:', cookiePreferences);
-        
-        // Apply Functional Cookies (remember user preferences)
-        if (cookiePreferences.functional) {
-            restoreUserPreferences();
-        }
-        
-        // Apply Analytics Cookies
-        if (cookiePreferences.analytics) {
-            console.log('Analytics tracking enabled');
-            initializeAnalytics();
-        } else {
-            console.log('Analytics tracking disabled');
-        }
-        
-        // Apply Advertising Cookies
-        if (cookiePreferences.advertising) {
-            console.log('Advertising cookies enabled');
-            initializeAdvertising();
-        } else {
-            console.log('Advertising cookies disabled');
-        }
-    }
-    
-    function initializeAnalytics() {
-        trackEvent('page_view', { timestamp: new Date().toISOString() });
-    }
-    
-    function initializeAdvertising() {
-        console.log('[Advertising] Ads initialized');
-    }
-    
-    function restoreUserPreferences() {
-        const lastServer = localStorage.getItem('last_selected_server');
-        if (lastServer && !isNaN(parseInt(lastServer))) {
-            switchServer(parseInt(lastServer));
-        }
-    }
-    
-    function saveLastServer(serverId) {
-        if (cookiePreferences.functional) {
-            localStorage.setItem('last_selected_server', serverId);
-        }
-    }
-    
-    // Cookie Settings Footer Link
-    function initCookieSettingsFooter() {
-        const cookieSettingsFooter = document.getElementById('cookieSettingsFooter');
-        const settingsModal = document.getElementById('cookieSettingsModal');
-        
-        if (cookieSettingsFooter) {
-            cookieSettingsFooter.addEventListener('click', (e) => {
-                e.preventDefault();
-                // Load current preferences
-                const functionalToggle = document.getElementById('functionalCookiesToggle');
-                const analyticsToggle = document.getElementById('analyticsCookiesToggle');
-                const advertisingToggle = document.getElementById('advertisingCookiesToggle');
-                
-                if (functionalToggle) functionalToggle.checked = cookiePreferences.functional;
-                if (analyticsToggle) analyticsToggle.checked = cookiePreferences.analytics;
-                if (advertisingToggle) advertisingToggle.checked = cookiePreferences.advertising;
-                
-                if (settingsModal) settingsModal.classList.add('show');
-            });
-        }
-    }
-
-    // ========== DATE & TIME FUNCTIONS ==========
+    // Date & Time Functions
     function initFloatingDateTimeBar() {
         if (!datetimeBar) return;
         const originalOffset = datetimeBar.offsetTop;
@@ -332,9 +460,9 @@
         }
         
         updateNextHolidayInfo();
+        updateCountdownTimer();
     }
 
-    // ========== HOLIDAY FUNCTIONS ==========
     function getAllHolidays() {
         return [...HOLIDAYS.bangladesh, ...HOLIDAYS.international, ...HOLIDAYS.islamic];
     }
@@ -343,7 +471,9 @@
         const today = new Date();
         const todayStr = today.toISOString().split('T')[0];
         for (const holiday of getAllHolidays()) {
-            if (holiday.date === todayStr) return holiday;
+            if (holiday.date === todayStr) {
+                return holiday;
+            }
         }
         return null;
     }
@@ -368,6 +498,39 @@
         return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     }
 
+    function getTimeRemaining(targetDate) {
+        const now = new Date();
+        const target = new Date(targetDate);
+        const diff = target - now;
+        
+        if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+        
+        return {
+            days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+            hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+            minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
+            seconds: Math.floor((diff % (1000 * 60)) / 1000)
+        };
+    }
+
+    function updateCountdownTimer() {
+        const nextHoliday = getNextUpcomingHoliday();
+        if (nextHoliday) {
+            const remaining = getTimeRemaining(nextHoliday.date);
+            const daysEl = document.getElementById('countdownDaysValue');
+            const hoursEl = document.getElementById('countdownHoursValue');
+            const minsEl = document.getElementById('countdownMinutesValue');
+            const secsEl = document.getElementById('countdownSecondsValue');
+            const nameEl = document.getElementById('countdownHolidayName');
+            
+            if (daysEl) daysEl.textContent = String(remaining.days).padStart(2, '0');
+            if (hoursEl) hoursEl.textContent = String(remaining.hours).padStart(2, '0');
+            if (minsEl) minsEl.textContent = String(remaining.minutes).padStart(2, '0');
+            if (secsEl) secsEl.textContent = String(remaining.seconds).padStart(2, '0');
+            if (nameEl) nameEl.textContent = nextHoliday.name;
+        }
+    }
+
     function updateNextHolidayInfo() {
         const nextHoliday = getNextUpcomingHoliday();
         const nextHolidayElement = document.getElementById('nextHolidayInfo');
@@ -389,6 +552,7 @@
     function displayCurrentHoliday() {
         const holiday = checkTodayHoliday();
         const displayDiv = document.getElementById('currentHolidayDisplay');
+        const celebrationBanner = document.getElementById('celebrationBanner');
         
         if (holiday && displayDiv) {
             let typeLabel = "";
@@ -396,24 +560,50 @@
             else if (holiday.type === "international") typeLabel = "International Holiday";
             else if (holiday.type === "islamic") typeLabel = "Islamic Holiday";
             
-            document.getElementById('currentHolidayName').innerHTML = `${holiday.name}`;
-            document.getElementById('currentHolidayType').textContent = typeLabel;
+            const nameEl = document.getElementById('currentHolidayName');
+            const typeEl = document.getElementById('currentHolidayType');
+            if (nameEl) nameEl.innerHTML = holiday.name;
+            if (typeEl) typeEl.textContent = typeLabel;
             displayDiv.style.display = 'block';
+            
+            if (holiday.theme && holiday.theme !== 'default') {
+                applyTheme(holiday.theme, holiday.message, holiday.bgIcon);
+            }
+            
+            if (celebrationBanner) {
+                const titleEl = document.getElementById('celebrationTitle');
+                const msgEl = document.getElementById('celebrationMessage');
+                const iconEl = document.getElementById('celebrationIcon');
+                if (titleEl) titleEl.innerHTML = `${holiday.bgIcon || '🎉'} ${holiday.message || `Happy ${holiday.name}!`} ${holiday.bgIcon || '🎉'}`;
+                if (msgEl) msgEl.innerHTML = `Wishing you and your family a wonderful celebration from CHALUNG family!`;
+                if (iconEl) iconEl.innerHTML = holiday.bgIcon || '🎉';
+                celebrationBanner.style.display = 'block';
+                triggerConfetti();
+                createPartyEffect(20);
+            }
         } else if (displayDiv) {
             displayDiv.style.display = 'none';
         }
     }
 
-    // ========== STREAMING FUNCTIONS ==========
+    const closeCelebration = document.getElementById('closeCelebration');
+    if (closeCelebration) {
+        closeCelebration.addEventListener('click', () => {
+            const banner = document.getElementById('celebrationBanner');
+            if (banner) banner.style.display = 'none';
+        });
+    }
+
+    // Streaming Functions
     function scrollToPlayer() {
-        playerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (playerSection) playerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function loadStream(serverId) {
         const server = SERVERS.find(s => s.id === serverId);
         if (server && playerFrame) {
             playerFrame.src = server.url;
-            currentChannelNameSpan.innerText = server.name;
+            if (currentChannelNameSpan) currentChannelNameSpan.innerText = server.name;
             showToast(`Now playing: ${server.name}`, 'success');
         }
     }
@@ -428,15 +618,25 @@
         
         heroServerBtns.forEach(btn => {
             const btnId = parseInt(btn.dataset.server);
-            btn.classList.toggle('active', btnId === serverId);
+            if (btnId === serverId) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
         });
         
         document.querySelectorAll('.channel-item').forEach(card => {
             const cardId = parseInt(card.dataset.serverId);
-            card.classList.toggle('active', cardId === serverId);
+            if (cardId === serverId) {
+                card.classList.add('active');
+            } else {
+                card.classList.remove('active');
+            }
         });
         
-        saveLastServer(serverId);
+        if (cookiePreferences.functional) {
+            localStorage.setItem('last_selected_server', serverId);
+        }
     }
 
     function buildChannels() {
@@ -456,7 +656,6 @@
         });
     }
 
-    // ========== UI FUNCTIONS ==========
     function initFullscreen() {
         const fullscreenBtn = document.getElementById('fullscreenBtn');
         const playerWrapper = document.querySelector('.player-wrapper');
@@ -497,7 +696,7 @@
         }
     }
 
-    // ========== SOCIAL ICONS FUNCTIONALITY ==========
+    // Social Icons
     function initFloatingSocialIcons() {
         const url = encodeURIComponent(window.location.href);
         const text = encodeURIComponent("Watch CHALUNG Live TV - Premium HD Streaming!");
@@ -598,9 +797,8 @@
         });
     }
 
-    // ========== MODAL FUNCTIONS ==========
+    // Modals
     function initModals() {
-        // Holidays Modal
         const holidaysBtn = document.getElementById('holidaysLinkBtn');
         const holidaysFooterBtn = document.getElementById('holidaysFooterBtn');
         const holidaysModal = document.getElementById('holidaysModal');
@@ -617,7 +815,6 @@
         if (closeHolidaysModal) closeHolidaysModal.addEventListener('click', () => holidaysModal.classList.remove('show'));
         if (closeHolidaysBtn) closeHolidaysBtn.addEventListener('click', () => holidaysModal.classList.remove('show'));
         
-        // Privacy Modal
         const privacyFooterBtn = document.getElementById('privacyFooterBtn');
         const privacyModal = document.getElementById('privacyModal');
         const closePrivacy = document.getElementById('closePrivacyModal');
@@ -628,7 +825,6 @@
         if (closePrivacy) closePrivacy.addEventListener('click', () => privacyModal.classList.remove('show'));
         if (closePrivacyBtn) closePrivacyBtn.addEventListener('click', () => privacyModal.classList.remove('show'));
         
-        // Legal Modal
         const legalFooterBtn = document.getElementById('legalFooterBtn');
         const legalModal = document.getElementById('legalModal');
         const closeLegal = document.getElementById('closeLegalModal');
@@ -712,12 +908,66 @@
         buildList(islamicContainer, HOLIDAYS.islamic, "Islamic", "islamic");
     }
 
+    // Cookie Consent
+    function initCookieConsent() {
+        const savedConsent = localStorage.getItem('cookie_consent_given');
+        const cookieBanner = document.getElementById('cookieConsent');
+        
+        if (!savedConsent && cookieBanner) {
+            setTimeout(() => cookieBanner.classList.add('show'), 500);
+        }
+        
+        const acceptBtn = document.getElementById('cookieAcceptBtn');
+        if (acceptBtn) {
+            acceptBtn.addEventListener('click', () => {
+                localStorage.setItem('cookie_consent_given', 'true');
+                if (cookieBanner) cookieBanner.classList.remove('show');
+                showToast('Cookies accepted!', 'success');
+            });
+        }
+        
+        const denyBtn = document.getElementById('cookieDenyBtn');
+        if (denyBtn) {
+            denyBtn.addEventListener('click', () => {
+                localStorage.setItem('cookie_consent_given', 'true');
+                if (cookieBanner) cookieBanner.classList.remove('show');
+                showToast('Only essential cookies enabled', 'info');
+            });
+        }
+        
+        const settingsBtn = document.getElementById('cookieSettingsBtn');
+        const settingsModal = document.getElementById('cookieSettingsModal');
+        const closeSettingsModal = document.getElementById('closeSettingsModal');
+        const savePrefsBtn = document.getElementById('saveCookiePreferencesBtn');
+        
+        if (settingsBtn && settingsModal) {
+            settingsBtn.addEventListener('click', () => settingsModal.classList.add('show'));
+        }
+        if (closeSettingsModal && settingsModal) {
+            closeSettingsModal.addEventListener('click', () => settingsModal.classList.remove('show'));
+        }
+        if (savePrefsBtn && settingsModal) {
+            savePrefsBtn.addEventListener('click', () => settingsModal.classList.remove('show'));
+        }
+        
+        const cookieSettingsFooter = document.getElementById('cookieSettingsFooter');
+        if (cookieSettingsFooter && settingsModal) {
+            cookieSettingsFooter.addEventListener('click', (e) => {
+                e.preventDefault();
+                settingsModal.classList.add('show');
+            });
+        }
+    }
+
     // ========== INITIALIZATION ==========
     function init() {
         updateDateTime();
         setInterval(updateDateTime, 1000);
+        setInterval(updateCountdownTimer, 1000);
         
         displayCurrentHoliday();
+        generateFloatingIcons('default');
+        startRandomEffects();
         
         buildChannels();
         initHeroButtons();
@@ -727,16 +977,16 @@
         initFloatingSocialIcons();
         initNavigation();
         initCookieConsent();
-        initCookieSettingsFooter();
         initModals();
         initFloatingDateTimeBar();
+        initDeveloperSection();
         
         if (playerFrame && SERVERS[0]) {
             playerFrame.src = SERVERS[0].url;
-            currentChannelNameSpan.innerText = SERVERS[0].name;
+            if (currentChannelNameSpan) currentChannelNameSpan.innerText = SERVERS[0].name;
         }
         
-        showToast('Welcome to CHALUNG!', 'success');
+        showToast('Welcome to CHALUNG! 🎬', 'success');
     }
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
